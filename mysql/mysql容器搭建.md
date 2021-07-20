@@ -2,7 +2,7 @@
 
 用于记录mysql容器搭建内容
 
-* ## 参考资料
+## 参考资料
 
   * [详解利用Dockerfile构建mysql镜像并实现数据的初始化及权限设置](https://www.cnblogs.com/zknublx/p/9303231.html)
 

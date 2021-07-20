@@ -1,9 +1,14 @@
--- 创建数据库
+-- <20210720073446>
+-- -----------------------------------------------------
+-- Database docker_mysql
+-- -----------------------------------------------------
 create database `docker_mysql` default character set utf8 collate utf8_general_ci;
  
 use docker_mysql;
  
--- 建表
+-- -----------------------------------------------------
+-- Table `docker_mysql`.`user`
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `user`;
  
 CREATE TABLE `user` (
@@ -17,7 +22,3 @@ CREATE TABLE `user` (
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
  
--- 插入数据
-INSERT INTO `user` (`id`, `created_at`, `last_modified`, `email`, `first_name`, `last_name`, `username`)
-VALUES
-  (0,1490257904,1490257904,'john.doe@example.com','John','Doe','user');

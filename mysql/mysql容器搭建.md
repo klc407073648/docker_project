@@ -175,3 +175,29 @@ docker run -d -p 3307:3306 docker-mysql
 **7、验证结果：**
 
 ![docker_result](./images/docker_result.png)
+
+## 项目搭建
+
+所需文件:
+```
+|-- build_mysql.sh
+|-- Dockerfile
+|-- setup.sh
+`-- sql
+    |-- docker_mysql
+    |   |-- create_table.sql
+    |   |-- init_data.sql
+    |   `-- update_data.sql
+    |-- privileges
+    |   `-- privileges.sql
+    `-- student
+        |-- create_table.sql
+        |-- init_data.sql
+        `-- update_data.sql
+
+```
+
+制作镜像
+```
+切到所在文件目录，直接执行./build_mysql.sh
+```

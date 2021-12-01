@@ -8,6 +8,11 @@
 
 ## 搭建过程
 
+https://www.runoob.com/docker/docker-compose.html
+https://github.com/sprintcube/docker-compose-lamp
+
+可以用curl 127.0.0.1:3308测试
+
 源文件
 
 ```
@@ -201,3 +206,12 @@ docker run -d -p 3307:3306 docker-mysql
 ```
 切到所在文件目录，直接执行./build_mysql.sh
 ```
+
+angular界面查询指令：
+
+```
+/api/database/student
+```
+
+![angular_search](./images/angular_search.png)
+

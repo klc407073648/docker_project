@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  fastdfs:
+    build: environment
+    image: "${FASTDFS_IMAGE_NAME}:${FASTDFS_IMAGE_TAR}"
+    restart: always
+    container_name: "${FASTDFS_CONTAINER_NAME}"
+    ports:
+     - "${HOST_MACHINE_FASTDFS_PORT}:8888"
+    volumes:
+      - ./storage:/fastdfs/storage

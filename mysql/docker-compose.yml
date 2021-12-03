@@ -2,18 +2,16 @@ version: '3.1'
 
 services:
   mysql:
-    env_file:
-      - ./environment/mysql.env
-    build: 
+    build:
       context: ./environment
       dockerfile: Dockerfile
       args:
-       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-       - MYSQL_USER=${MYSQL_USER}
-       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-       - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
     image: "${MYSQL_IMAGE_NAME}:${MYSQL_IMAGE_TAR}"
     restart: always
     container_name: "${MYSQL_CONTAINER_NAME}"
     ports:
-     - "${HOST_MACHINE_MYSQL_PORT}:3306"
+      - "${HOST_MACHINE_MYSQL_PORT}:3306"

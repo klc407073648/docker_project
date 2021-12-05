@@ -1,0 +1,5 @@
+1.scons-3.1.1.zip  jsoncpp所需文件
+2.cmake-3.14.5.tar.gz  高版本编译需要
+3.gcc-9.1.0.tar.gz   poco编译需要支持C++14，需要升级
+
+源文件见source_file

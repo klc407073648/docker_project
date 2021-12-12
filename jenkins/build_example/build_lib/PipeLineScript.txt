@@ -1,0 +1,32 @@
+pipeline {
+    agent none
+
+    stages {
+        stage('download code') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/workspace'){
+                   sh "./download_code.sh" 
+                }
+            }
+        }
+        
+        stage('clean build env') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/workspace'){
+                   sh "./clean_build_env.sh"
+                }
+            }
+        }
+
+        stage('run build env') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/workspace'){
+                   sh "./run_build_env.sh"
+                }
+            }
+        }
+    }
+}

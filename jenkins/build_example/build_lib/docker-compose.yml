@@ -1,5 +1,14 @@
 version: '3'
 
+networks:
+  stibel_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${PROJECT_NETWORK_SUBNET}
+          gateway: ${PROJECT_NETWORK_GATEWAY}
+
 services:
   mysql:
     build:
@@ -15,8 +24,12 @@ services:
     container_name: "${PROJECT_NAME}_${MYSQL_CONTAINER_NAME}"
     ports:
       - '${MYSQL_HOST_PORT}:3306'
+    networks:
+      stibel_net:
+        ipv4_address: ${MYSQL_HOST_IP}
     # 涉及mysql-safe 暂时不处理
     #volumes:
+      #- /etc/localtime:/etc/localtime
       #- ./data/mysql/data:/var/lib/mysql
       #- ./environment/mysql/conf/my.cnf:/etc/my.cnf
   nginx:
@@ -28,7 +41,11 @@ services:
     volumes:
       - ./environment/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
       - ./environment/nginx/conf.d:/etc/nginx/conf.d
+      - /etc/localtime:/etc/localtime
       - ./data/nginx/html:/usr/share/nginx/html:rw
+    networks:
+      stibel_net:
+        ipv4_address: ${NGINX_HOST_IP}
   webserver:
     image: klc407073648/centos_build_lib:v3.0
     container_name: "${PROJECT_NAME}_${WEBSERVER_CONTAINER_NAME}"
@@ -36,5 +53,14 @@ services:
     ports:
       - '${WEBSERVER_HOST_PORT}:9950'
     volumes:
-      - ./data/webserver/data:/home/tools/StiBel
+      - /etc/localtime:/etc/localtime
+      - ./data/webserver/data:/home/tools
+    environment:
+      - HOME_PATH=/home/tools/Stibel
+      - MYSQL_HOST_IP=${MYSQL_HOST_IP}
+      - STIBEL_BUILD_RELEASE_TYPE=ON
+      - STIBEL_BUILD_EXAMPLES=OFF
+    networks:
+      stibel_net:
+        ipv4_address: ${WEBSERVER_HOST_IP}
     command: ["tail", "-f", "/dev/null"]

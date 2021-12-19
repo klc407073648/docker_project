@@ -25,66 +25,46 @@ function buildLib() {
     docker run -it -d -v ${download_code_path}/build_lib:/home/tools/build_lib --name centos_build_lib_0 docker.io/klc407073648/centos_build_lib:v3.0 /bin/bash
     docker exec -i centos_build_lib_0 /bin/sh -c "cd /home/tools/build_lib/build && ./build.sh"
 	
+    cd $download_code_path/build_lib/output
+
 	build_tar_name=`ls |grep StiBel`
 	cp -rf ${download_code_path}/build_lib/output/${build_tar_name} ${download_code_path}/StiBel
 
-    docker stop centos_build_lib_0
-    docker rm centos_build_lib_0
-
-    docker-compose up -d
-    docker exec -i stibel_webserver_0 /bin/sh -c "cd /home/tools/StiBel/DockerBuild && ./buildMyPrj.sh"
-
+    #docker stop centos_build_lib_0
+    #docker rm centos_build_lib_0
 
     logDebug "buildLib end"
 }
 
-function buildWeb() {
-    logDebug "buildWeb begin"
+function buildStiBelProject() {
+    logDebug "buildStiBelProject begin"
 
-    cd $download_code_path/docker_project/
+	cd ${download_code_path}/..
+	
+	net_name=`docker network ls |grep "stibel_net" |awk '{print $2}'`
+	docker network rm $net_name
+    docker-compose up -d
 
-    cd ./nginx && chmod 777 *.sh && dos2unix *.sh
+    cd ${download_code_path}/../data/nginx/html/ && tar -zxf web.tar.gz
 
-    ./build_nginx.sh
+    mkdir -p ${download_code_path}/../data/webserver/data/StiBel
+    cp -rf ${download_code_path}/StiBel/*   ${download_code_path}/../data/webserver/data/StiBel
+	
+	cd ${download_code_path}/../data/webserver/data/StiBel/DockerBuild/
+	
+	chmod 777 *.sh && dos2unix *.sh
+	
+	#进入容器后手动操作，可以用
+    #docker exec -i stibel_webserver_0 /bin/sh -c "cd /home/tools/StiBel/DockerBuild && ./build.sh"
 
-    cd ./environment/html/ && tar -zxf web.tar.gz
-
-    logDebug "buildWeb end"
-}
-
-function buildMySQL() {
-    logDebug "buildMySQL begin"
-
-    cd $download_code_path/docker_project/
-
-    cd ./mysql && chmod 777 *.sh && dos2unix *.sh
-
-    ./build_mysql.sh
-
-    logDebug "buildMySQL end"
-}
-
-function buildStiBel() {
-    logDebug "buildStiBel begin"
-
-    cd $download_code_path/StiBel/
-
-    chmod 777 *.sh && dos2unix *.sh
-
-    buildTime=$(date +"%Y%m%d")
-
-    cp $download_code_path/build_lib/output/StiBel_${buildTime}.tar.gz ${download_code_path}/StiBel ##拷贝buildLib的库文件
-
-    docker run -it -d -p 9950:9950 -v ${download_code_path}/StiBel:/home/tools/StiBel --name centos_stibel_0 docker.io/klc407073648/centos_build_lib:v3.0 /bin/bash
-    docker exec -i centos_stibel_0 /bin/sh -c "cd /home/tools/StiBel && ./buildMyPrj.sh"
-
-    logDebug "buildStiBel end"
+    logDebug "buildStiBelProject end"
 }
 
 function MAIN() {
     logDebug "MAIN begin"
     printEnvInfo
     buildLib
+    buildStiBelProject
     logDebug "MAIN end"
 }
 

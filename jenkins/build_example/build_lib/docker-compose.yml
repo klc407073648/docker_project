@@ -64,3 +64,4 @@ services:
       stibel_net:
         ipv4_address: ${WEBSERVER_HOST_IP}
     command: ["tail", "-f", "/dev/null"]
+    #command: ["bash", "-c", "cd /home/tools/StiBel/DockerBuild && ./build.sh"]

@@ -1,0 +1,34 @@
+version: '3'
+
+# es和kibana容器互联。这里先创建一个网络
+# docker network create es-net  
+services:
+  elasticsearch_n0:
+    image: elasticsearch:7.2.0
+    container_name: elasticsearch_n0
+    privileged: true
+    environment:
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - "discovery.type=single-node"
+    volumes:
+      - ./es-data:/usr/share/elasticsearch/data
+      - ./es-plugins:/usr/share/elasticsearch/plugins 
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - es-net
+  kibana:
+    image: kibana:7.2.0
+    container_name: kibana
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch_n0:9200"
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch_n0
+    networks:
+      - es-net
+networks:
+  es-net:
+    external: true

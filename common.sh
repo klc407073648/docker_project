@@ -71,6 +71,8 @@ function writeLogFileAndEcho()
    fi
 }
 
+
+# mysql nginx 使用
 function build_docker_project()
 {
     docker_name=$1

@@ -31,3 +31,17 @@ volumes:
       - ./environment/html:/usr/share/nginx/html:ro
 ```
 
+
+
+
+
+待处理
+
+* docker 构建第三方库
+* elasticseach,
+* portainer可视化监控容器，一个容器用于重新拉失败的容器内容
+* Jenkins Pipeline
+
+
+* 为动态的东西书写配置文件，不要每次改代码重新编译来实现，例如mysql的连接参数
+* yamlcpp已解决，考虑先把所需的web，webServer，Stibel_tar.gz构建出来再运行docker-compose 学习sylar的配置类

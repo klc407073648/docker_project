@@ -6,7 +6,8 @@ cur_path=`pwd`
 build_container_name='stibel_run_web_0'
 
 #构建build_lib任务生成公共库
-function runStibelPrj() {
+function runStibelPrj() 
+{
     logDebug "runStibelPrj begin"
 
     cd $cur_path
@@ -43,10 +44,11 @@ function runStibelPrj() {
     logDebug "runStibelPrj end"
 }
 
-function MAIN() {
-  logDebug "MAIN begin"
+function MAIN() 
+{
+  logDebug "run_stibel_prj.sh MAIN begin"
   runStibelPrj
-  logDebug "MAIN end"
+  logDebug "run_stibel_prj.sh MAIN end"
 }
 
 MAIN

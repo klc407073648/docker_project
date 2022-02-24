@@ -44,7 +44,7 @@ function write_log()
 #四个级别:Debug、Info、Warn、Error
 function logDebug()
 {
-   if [ $log_level -gt $logDebugNum ];then 
+   if [ $log_level -ge $logDebugNum ];then 
       echo -e "\033[32m-- $1 --\033[0m"
    fi
 
@@ -55,7 +55,7 @@ function logDebug()
 
 function logInfo()
 {
-   if [ $log_level -gt $logInfoNum ];then 
+   if [ $log_level -ge $logInfoNum ];then 
       echo -e "\033[36m-- $1 --\033[0m"
    fi
 
@@ -66,7 +66,7 @@ function logInfo()
 
 function logWarn()
 {
-   if [ $log_level -gt $logWarnNum ];then 
+   if [ $log_level -ge $logWarnNum ];then 
       echo -e "\033[33m-- $1 --\033[0m"
    fi
 
@@ -77,7 +77,7 @@ function logWarn()
 
 function logError()
 {
-   if [ $log_level -gt $logErrorNum ];then
+   if [ $log_level -ge $logErrorNum ];then
       echo -e "\033[31m-- $1 --\033[0m"
    fi
 

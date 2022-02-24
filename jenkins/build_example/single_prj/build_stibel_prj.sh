@@ -10,7 +10,8 @@ code_git_name='StiBel'
 code_git_path='git@github.com:klc407073648/StiBel.git'
 
 #打印环境变量
-function printEnvInfo() {
+function printEnvInfo() 
+{
   logDebug "printEnvInfo begin"
 
   if [ ! -d ${code_download_path} ]; then
@@ -26,7 +27,8 @@ function printEnvInfo() {
 }
 
 #清理运行容器
-function cleanRunContainer() {
+function cleanRunContainer() 
+{
   logDebug "cleanRunContainer begin"
 
   cnt=`docker ps -a | grep $build_container_name | wc -l`
@@ -41,7 +43,8 @@ function cleanRunContainer() {
 }
 
 #下载代码
-function downloadCode() {
+function downloadCode() 
+{
   logDebug "downloadCode begin"
 
   cd $code_download_path
@@ -53,7 +56,8 @@ function downloadCode() {
 }
 
 #构建buildStiBelProject任务生成公共库
-function buildStiBelProject() {
+function buildStiBelProject() 
+{
   logDebug "buildStiBelProject begin"
 
   cd $code_download_path/$code_git_name/
@@ -70,13 +74,21 @@ function buildStiBelProject() {
   logDebug "buildStiBelProject end"
 }
 
-function MAIN() {
-  logDebug "MAIN begin"
+function MAIN() 
+{
+  logDebug "build_stibel_prj.sh MAIN begin"
   printEnvInfo
   cleanRunContainer
   downloadCode
   buildStiBelProject
-  logDebug "MAIN end"
+  logDebug "build_stibel_prj.sh MAIN end"
 }
 
 MAIN
+
+if [ $? -ne 0 ];then
+  echo "check build_stibel_prj.sh fail"
+  exit 1
+else
+  echo "check build_stibel_prj.sh success"
+fi

@@ -10,7 +10,8 @@ code_git_name='build_lib'
 code_git_path='git@github.com:klc407073648/build_lib.git'
 
 #打印环境变量
-function printEnvInfo() {
+function printEnvInfo() 
+{
   logDebug "printEnvInfo begin"
 
   if [ ! -d ${code_download_path} ]; then
@@ -26,7 +27,8 @@ function printEnvInfo() {
 }
 
 #清理运行容器
-function cleanRunContainer() {
+function cleanRunContainer() 
+{
   logDebug "cleanRunContainer begin"
 
   cnt=`docker ps -a | grep $build_container_name | wc -l`
@@ -41,7 +43,8 @@ function cleanRunContainer() {
 }
 
 #下载代码
-function downloadCode() {
+function downloadCode() 
+{
     logDebug "downloadCode begin"
 
     cd $code_download_path
@@ -53,7 +56,8 @@ function downloadCode() {
 }
 
 #构建build_lib任务生成公共库
-function buildLib() {
+function buildLib() 
+{
     logDebug "buildLib begin"
 
     cd $code_download_path/build_lib/
@@ -71,13 +75,21 @@ function buildLib() {
     logDebug "buildLib end"
 }
 
-function MAIN() {
-  logDebug "MAIN begin"
+function MAIN() 
+{
+  logDebug "build_lib.sh MAIN begin"
   printEnvInfo
   cleanRunContainer
   downloadCode
   buildLib
-  logDebug "MAIN end"
+  logDebug "build_lib.sh MAIN end"
 }
 
 MAIN
+
+if [ $? -ne 0 ];then
+  echo "check build_lib.sh fail"
+  exit 1
+else
+  echo "check build_lib.sh success"
+fi

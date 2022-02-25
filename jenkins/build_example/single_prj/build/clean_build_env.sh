@@ -4,13 +4,28 @@ source ./common.sh
 #全局变量
 cur_path=`pwd`
 build_container_list='centos_build_lib_0 stibel_nginx_web_0 stibel_mysql_0 stibel_webserver_0'  
+image_name_list='stibel_nginx_web stibel_mysql stibel_webserver'
+image_tar='v1.0'
 
-function cleanRunContainer() {
+function cleanBuildEnv() 
+{
+    logDebug "cleanBuildEnv begin"
+
+    cd ${cur_path}
+
+    rm -rf ./download
+    rm -rf ./logs
+
+    logDebug "cleanBuildEnv end"
+}
+
+function cleanRunContainer() 
+{
   logDebug "cleanRunContainer begin"
 
   sum=0
   for container_name in $build_container_list; do
-    cnt=$(docker ps -a | grep $container_name | wc -l)
+    cnt=`docker ps -a | grep $container_name | wc -l`
     if [ "$cnt"x = "1"x ]; then
       sum=`expr $sum + $cnt`
       docker stop $container_name
@@ -25,16 +40,20 @@ function cleanRunContainer() {
   logDebug "cleanRunContainer end"
 }
 
-function cleanBuildEnv() 
+function cleanBuildImage() 
 {
-    logDebug "cleanBuildEnv begin"
+  logDebug "cleanBuildImage begin"
 
-    cd ${cur_path}
+  for image_name in $image_name_list; do
+    logDebug "${image_name} in"
+    cnt=`docker images -a | grep $image_name | wc -l`
+    if [ "$cnt"x = "1"x ]; then
+      docker rmi ${image_name}:${image_tar}
+      logDebug "docker rmi ${image_name}:${image_tar}"
+    fi
+  done
 
-    rm -rf ./download
-    rm -rf ./logs
-
-    logDebug "cleanBuildEnv end"
+  logDebug "cleanBuildImage end"
 }
 
 function MAIN() 
@@ -42,6 +61,7 @@ function MAIN()
   logDebug "clean_build_env.sh MAIN begin"
   cleanBuildEnv
   cleanRunContainer
+  cleanBuildImage
   logDebug "clean_build_env.sh MAIN end"
 }
 

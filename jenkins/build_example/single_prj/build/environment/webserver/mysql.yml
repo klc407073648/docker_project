@@ -1,0 +1,6 @@
+mysql:
+  host: $MYSQL_HOST_IP
+  user: root
+  port: $MYSQL_CONTAINER_PORT
+  passwd: $MYSQL_PASSWORD
+  dbname: $MYSQL_DATABASE

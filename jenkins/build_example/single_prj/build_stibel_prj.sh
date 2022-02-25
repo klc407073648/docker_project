@@ -2,7 +2,7 @@
 source ./common.sh
 
 #全局变量
-cur_path=$(pwd)
+cur_path=`pwd`
 build_container_name='stibel_build_web_0'
 build_image_name='docker.io/klc407073648/centos_build_lib:v3.0'
 code_download_path=${cur_path}/download

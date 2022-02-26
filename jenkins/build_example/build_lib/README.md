@@ -161,3 +161,7 @@ Receiving objects: 100% (197/197), 25.08 MiB | 49.00 KiB/s, done.
 Resolving deltas: 100% (42/42), done.
 -- docker_project download end --
 ```
+
+# 待实现的idea
+
+- [ ] 分多个进程来处理，解耦先参考其他项目，分redis进程，mysql进程

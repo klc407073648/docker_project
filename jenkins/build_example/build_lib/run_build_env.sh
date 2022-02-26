@@ -23,15 +23,15 @@ function buildLib() {
 
     cd ./build && chmod 777 *.sh && dos2unix *.sh
     docker run -it -d -v ${download_code_path}/build_lib:/home/tools/build_lib --name centos_build_lib_0 docker.io/klc407073648/centos_build_lib:v3.0 /bin/bash
-    docker exec -i centos_build_lib_0 /bin/sh -c "cd /home/tools/build_lib/build && ./build.sh"
+    docker exec -i centos_build_lib_0 /bin/sh -c "source /etc/profile && cd /home/tools/build_lib/build && ./build.sh"
 	
     cd $download_code_path/build_lib/output
 
 	build_tar_name=`ls |grep StiBel`
 	cp -rf ${download_code_path}/build_lib/output/${build_tar_name} ${download_code_path}/StiBel
 
-    #docker stop centos_build_lib_0
-    #docker rm centos_build_lib_0
+    docker stop centos_build_lib_0
+    docker rm centos_build_lib_0
 
     logDebug "buildLib end"
 }
@@ -55,15 +55,17 @@ function buildStiBelProject() {
 	chmod 777 *.sh && dos2unix *.sh
 	
 	#进入容器后手动操作，可以用
-    #docker exec -i stibel_webserver_0 /bin/sh -c "cd /home/tools/StiBel/DockerBuild && ./build.sh"
-
+    # root       349     0  0 20:47 ?        00:00:00 [rrserver_main] <defunct>
+    #待解决，目前只能最后手动进入容器执行对应命令，从宿主机执行后，进入容器kill对应进程变成僵尸进程，看门狗无法再次拉起来
+    #docker exec -i stibel_webserver_0 /bin/sh -c "source /etc/profile && cd /home/tools/StiBel/DockerBuild && ./build.sh"
+    
     logDebug "buildStiBelProject end"
 }
 
 function MAIN() {
     logDebug "MAIN begin"
     printEnvInfo
-    buildLib
+    #buildLib
     buildStiBelProject
     logDebug "MAIN end"
 }

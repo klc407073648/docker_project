@@ -9,7 +9,8 @@ docker_project_git_path='git@github.com:klc407073648/docker_project.git'
 
 download_code_list='build_lib StiBel docker_project'
 
-function printEnvInfo() {
+function printEnvInfo() 
+{
     logDebug "printEnvInfo begin"
 
     if [ ! -d ${download_code_path} ]; then
@@ -27,7 +28,8 @@ function printEnvInfo() {
     logDebug "printEnvInfo end"
 }
 
-function downloadCode() {
+function downloadCode() 
+{
     logDebug "downloadCode begin"
 
     cd $download_code_path
@@ -44,7 +46,8 @@ function downloadCode() {
     logDebug "downloadCode end"
 }
 
-function MAIN() {
+function MAIN() 
+{
     logDebug "MAIN begin"
     printEnvInfo
     downloadCode

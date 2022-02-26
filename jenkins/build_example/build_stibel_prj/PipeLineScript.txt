@@ -1,0 +1,14 @@
+pipeline {
+    agent none
+
+    stages {
+        stage('build_stibel_prj') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test'){
+                   sh "./build_stibel_prj.sh" 
+                }
+            }
+        }
+    }
+}

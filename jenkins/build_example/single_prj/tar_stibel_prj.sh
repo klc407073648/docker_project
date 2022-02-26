@@ -19,11 +19,11 @@ function tarStibelPrj()
 
     build_tar_name=`ls |grep StiBel_Prj |tail -1`
 
-    cp -rf $cur_path/download/StiBel/${build_tar_name} ${cur_path}
-    cp -rf $cur_path/download/StiBel/libstdc++.so.6.0.26 ${cur_path}
+    cp -rf $cur_path/download/StiBel/${build_tar_name} ${cur_path} || (logError "cp tar fail" && exit 1)
+    cp -rf $cur_path/download/StiBel/libstdc++.so.6.0.26 ${cur_path} || (logError "cp libstdc++ fail" && exit 1)
 
-    #docker stop ${build_container_name}
-    #docker rm ${build_container_name}
+    docker stop ${build_container_name}
+    docker rm ${build_container_name}
 
     logDebug "tarStibelPrj end"
 }

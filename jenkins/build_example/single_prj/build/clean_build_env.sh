@@ -4,7 +4,7 @@ source ./common.sh
 #全局变量
 cur_path=`pwd`
 build_container_list='centos_build_lib_0 stibel_nginx_web_0 stibel_mysql_0 stibel_webserver_0'  
-image_name_list='stibel_nginx_web stibel_mysql stibel_webserver'
+build_image_name_list='stibel_nginx_web stibel_mysql stibel_webserver'
 image_tar='v1.0'
 
 function cleanBuildEnv() 
@@ -44,7 +44,7 @@ function cleanBuildImage()
 {
   logDebug "cleanBuildImage begin"
 
-  for image_name in $image_name_list; do
+  for image_name in $build_image_name_list; do
     logDebug "${image_name} in"
     cnt=`docker images -a | grep $image_name | wc -l`
     if [ "$cnt"x = "1"x ]; then

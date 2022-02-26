@@ -12,8 +12,8 @@ function copyFiles()
 
     build_tar_name=`ls |grep StiBel_Prj |tail -1`
 	
-	cp -rf ./${build_tar_name} $cur_path/environment/webserver/StiBel_Prj.tar.gz
-    cp -rf ./libstdc++.so.6.0.26 $cur_path/environment/webserver/
+	cp -rf ./${build_tar_name} $cur_path/environment/webserver/StiBel_Prj.tar.gz || (logError "cp StiBel_Prj fail" && exit 1)
+    cp -rf ./libstdc++.so.6.0.26 $cur_path/environment/webserver/   || (logError "cp libstdc++ fail" && exit 1)
 
     checkBuildResult "copyFiles"
     
@@ -30,7 +30,7 @@ function buildStiBelProject()
 	docker network rm $net_name
     docker-compose up -d
 
-    checkBuildResult "docker-compose_up"
+    checkBuildResult "docker-compose fail"
 
     cd ${cur_path}/data/nginx/html/ && tar -zxf web.tar.gz
 

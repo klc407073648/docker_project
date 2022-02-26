@@ -5,7 +5,7 @@ pipeline {
         stage('clean_build_env') {
             agent {label 'node1'}
             steps {
-                dir('/home/jenkins/test'){
+                dir('/home/jenkins/test/single_prj'){
                    sh "./clean_build_env.sh" 
                 }
             }
@@ -14,7 +14,7 @@ pipeline {
         stage('build_lib') {
             agent {label 'node1'}
             steps {
-                dir('/home/jenkins/test'){
+                dir('/home/jenkins/test/single_prj'){
                    sh "./build_lib.sh"
                 }
             }
@@ -23,7 +23,7 @@ pipeline {
         stage('check_build_result') {
             agent {label 'node1'}
             steps {
-                dir('/home/jenkins/test'){
+                dir('/home/jenkins/test/single_prj'){
                    sh "./check_build_result.sh"
                 }
             }
@@ -32,7 +32,7 @@ pipeline {
         stage('build_stibel_prj') {
             agent {label 'node1'}
             steps {
-                dir('/home/jenkins/test'){
+                dir('/home/jenkins/test/single_prj'){
                    sh "./build_stibel_prj.sh"
                 }
             }
@@ -41,7 +41,7 @@ pipeline {
         stage('tar_stibel_prj') {
             agent {label 'node1'}
             steps {
-                dir('/home/jenkins/test'){
+                dir('/home/jenkins/test/single_prj'){
                    sh "./tar_stibel_prj.sh"
                 }
             }
@@ -50,7 +50,7 @@ pipeline {
         stage('run_stibel_prj') {
             agent {label 'node1'}
             steps {
-                dir('/home/jenkins/test'){
+                dir('/home/jenkins/test/single_prj'){
                    sh "./run_stibel_prj.sh"
                 }
             }

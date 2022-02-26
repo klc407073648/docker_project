@@ -52,6 +52,8 @@ function downloadCode()
   rm -rf ./${code_git_name}
   git clone ${code_git_path}
 
+  checkExecResult downloadCode
+
   logDebug "downloadCode end"
 }
 
@@ -70,6 +72,8 @@ function buildStiBelProject()
 
   docker cp ./${build_tar_name} ${build_container_name}:/home/tools/$code_git_name
   docker exec -i ${build_container_name} /bin/sh -c "source /etc/profile && cd /home/tools/StiBel/DockerBuild && ./build.sh"
+
+  checkExecResult buildStiBelProject
 
   logDebug "buildStiBelProject end"
 }

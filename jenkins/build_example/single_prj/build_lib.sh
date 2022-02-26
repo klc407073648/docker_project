@@ -52,6 +52,8 @@ function downloadCode()
     rm -rf ./${code_git_name}
     git clone ${code_git_path}
 
+    checkExecResult downloadCode
+
     logDebug "downloadCode end"
 }
 
@@ -66,11 +68,13 @@ function buildLib()
     docker run -it -d -v ${code_download_path}/build_lib:/home/tools/build_lib --name ${build_container_name} ${build_image_name} /bin/bash
     docker exec -i ${build_container_name} /bin/sh -c "source /etc/profile && cd /home/tools/build_lib/build && ./build.sh"
 	
+    checkExecResult buildLib
+
     cd $code_download_path/build_lib/output
 
     build_tar_name=`ls |grep StiBel |tail -1`
 
-    cp -rf ${code_download_path}/build_lib/output/${build_tar_name} ${cur_path}
+    cp -rf ${code_download_path}/build_lib/output/${build_tar_name} ${cur_path} || (logError "cp tar fail" && exit 1)
 
     logDebug "buildLib end"
 }

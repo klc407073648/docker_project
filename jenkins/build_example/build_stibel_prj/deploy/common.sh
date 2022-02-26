@@ -3,6 +3,11 @@
 #当前路径
 export cur_path=`pwd`
 
+#部署容器,部署镜像名，配置文件
+export deploy_container_list='stibel_nginx_web_0 stibel_mysql_0 stibel_webserver_0'  
+export deploy_image_name_list='stibel_nginx_web stibel_mysql stibel_webserver'
+export config_file='.env'
+
 #日志路径、日志文件、日志级别
 log_dir=$cur_path/logs
 log_file=$log_dir/my.log

@@ -2,7 +2,7 @@ pipeline {
     agent none
 
     stages {
-        stage('clean_build_env') {
+        stage('clean_before_build') {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/build'){
@@ -43,6 +43,15 @@ pipeline {
             steps {
                 dir('/home/jenkins/test/build'){
                    sh "./build_step_5.sh"
+                }
+            }
+        }
+        
+        stage('clean_after_build') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/build'){
+                   sh "./build_step_6.sh"
                 }
             }
         }

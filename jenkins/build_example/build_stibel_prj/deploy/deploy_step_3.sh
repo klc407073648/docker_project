@@ -1,9 +1,6 @@
 #!/bin/bash
 source ./common.sh
 
-#全局变量
-cur_path=`pwd`
-
 function copyFiles() 
 {
     logDebug "copyFiles begin"

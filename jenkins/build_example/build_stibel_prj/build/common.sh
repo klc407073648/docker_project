@@ -3,6 +3,27 @@
 #当前路径
 export cur_path=`pwd`
 
+export build_container_list='stibel_build_lib_0 stibel_build_web_0'
+
+#build_lib所需宏定义
+export build_lib_container_name='stibel_build_lib_0'
+export build_lib_image_name='docker.io/klc407073648/centos_build_lib:v3.0'
+export build_lib_code_download_path=${cur_path}/download
+export build_lib_code_git_name='build_lib'
+export build_lib_code_git_path='git@github.com:klc407073648/build_lib.git'
+
+#build_web所需宏定义
+export build_web_container_name='stibel_build_web_0'
+export build_web_image_name='docker.io/klc407073648/centos_build_lib:v3.0'
+export build_web_code_download_path=${cur_path}/download
+export build_web_code_git_name='StiBel'
+export build_web_code_git_path='git@github.com:klc407073648/StiBel.git'
+
+#日志路径、日志文件、日志级别
+log_dir=$cur_path/logs
+log_file=$log_dir/my.log
+log_level=4
+
 #日志路径、日志文件、日志级别
 log_dir=$cur_path/logs
 log_file=$log_dir/my.log

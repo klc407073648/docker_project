@@ -1,10 +1,8 @@
 #!/bin/bash
 source ./common.sh
 
-#全局变量
-config_file='.env'
-
-function modifyEnvVar() {
+function modifyEnvVar() 
+{
   logDebug "modifyEnvVar begin"
 
   WEBSERVER_HOST_IP=`cat $config_file |grep "WEBSERVER_HOST_IP=" |cut -f2 -d'='`
@@ -39,7 +37,7 @@ function MAIN()
 {
   logError "${0}:modify_env_var begin"
   modifyEnvVar
-  logDebug "${0}:modify_env_var end"
+  logError "${0}:modify_env_var end"
 }
 
 MAIN

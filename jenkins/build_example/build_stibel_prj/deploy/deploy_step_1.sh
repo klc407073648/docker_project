@@ -1,11 +1,6 @@
 #!/bin/bash
 source ./common.sh
 
-#全局变量
-cur_path=`pwd`
-build_container_list='centos_build_lib_0 stibel_nginx_web_0 stibel_mysql_0 stibel_webserver_0'  
-build_image_name_list='stibel_nginx_web stibel_mysql stibel_webserver'
-config_file='.env'
 image_tar=''
 
 function getConfigVar() 
@@ -25,7 +20,6 @@ function cleanBuildEnv()
 
     cd ${cur_path}
 
-    rm -rf ./download
     rm -rf ./logs
 
     logDebug "cleanBuildEnv end"
@@ -35,10 +29,10 @@ function cleanRunContainer()
 {
   logDebug "cleanRunContainer begin"
 
-  logInfo "build_container_list:[${build_container_list}]"
+  logInfo "deploy_container_list:[${deploy_container_list}]"
 
   sum=0
-  for container_name in $build_container_list; do
+  for container_name in $deploy_container_list; do
     cnt=`docker ps -a | grep $container_name | wc -l`
     if [ "$cnt"x = "1"x ]; then
       sum=`expr $sum + $cnt`
@@ -58,9 +52,9 @@ function cleanBuildImage()
 {
   logDebug "cleanBuildImage begin"
 
-  logInfo "build_image_name_list:[${build_image_name_list}]"
+  logInfo "deploy_image_name_list:[${deploy_image_name_list}]"
 
-  for image_name in $build_image_name_list; do
+  for image_name in $deploy_image_name_list; do
     logDebug "${image_name} in"
     cnt=`docker images -a | grep $image_name | wc -l`
     if [ "$cnt"x = "1"x ]; then

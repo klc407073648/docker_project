@@ -1,18 +1,6 @@
 #!/bin/bash
 source ./common.sh
 
-function cleanBuildEnv() 
-{
-    logDebug "cleanBuildEnv begin"
-
-    cd ${cur_path}
-
-    rm -rf ./download
-    rm -rf ./logs
-
-    logDebug "cleanBuildEnv end"
-}
-
 function cleanRunContainer() 
 {
   logDebug "cleanRunContainer begin"
@@ -36,10 +24,9 @@ function cleanRunContainer()
 
 function MAIN() 
 {
-  logError "${0}:clean_before_build begin"
-  cleanBuildEnv
+  logError "${0}:clean_after_build begin"
   cleanRunContainer
-  logError "${0}:clean_before_build end"
+  logError "${0}:clean_after_build end"
 }
 
 MAIN

@@ -19,8 +19,8 @@ function tarStibelPrj()
 
     build_tar_name=`ls |grep StiBel_Prj |tail -1`
 
-    cp -rf $cur_path/download/StiBel/${build_tar_name} ${cur_path} || (logError "cp tar fail" && exit 1)
-    cp -rf $cur_path/download/StiBel/libstdc++.so.6.0.26 ${cur_path} || (logError "cp libstdc++ fail" && exit 1)
+    cp -rf $cur_path/download/StiBel/${build_tar_name} ${cur_path}/../output || (logError "cp tar fail" && exit 1)
+    cp -rf $cur_path/download/StiBel/libstdc++.so.6.0.26 ${cur_path}/../output || (logError "cp libstdc++ fail" && exit 1)
 
     docker stop ${build_container_name}
     docker rm ${build_container_name}
@@ -30,16 +30,16 @@ function tarStibelPrj()
 
 function MAIN() 
 {
-  logDebug "tar_stibel_prj.sh MAIN begin"
+  logError "${0}:tar_stibel_prj begin"
   tarStibelPrj
-  logDebug "tar_stibel_prj.sh MAIN end"
+  logError "${0}:tar_stibel_prj end"
 }
 
 MAIN
 
 if [ $? -ne 0 ];then
-  echo "check tar_stibel_prj.sh fail"
+  echo "check ${0} fail"
   exit 1
 else
-  echo "check tar_stibel_prj.sh success"
+  echo "check ${0} success"
 fi

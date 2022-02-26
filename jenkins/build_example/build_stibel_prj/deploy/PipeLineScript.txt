@@ -1,0 +1,32 @@
+pipeline {
+    agent none
+
+    stages {
+        stage('clean_build_env') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/deploy'){
+                   sh "./deploy_step_1.sh" 
+                }
+            }
+        }
+
+        stage('modify_env_var') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/deploy'){
+                   sh "./deploy_step_2.sh" 
+                }
+            }
+        }
+
+        stage('deploy_stibel_prj') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/deploy'){
+                   sh "./deploy_step_3.sh" 
+                }
+            }
+        }
+    }
+}

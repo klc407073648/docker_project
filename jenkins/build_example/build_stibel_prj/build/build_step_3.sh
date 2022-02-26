@@ -23,16 +23,16 @@ function checkResult()
 
 function MAIN() 
 {
-  logDebug "check_build_result.sh MAIN begin"
+  logError "${0}:check_build_result begin"
   checkResult
-  logDebug "check_build_result.sh MAIN end"
+  logError "${0}:check_build_result end"
 }
 
 MAIN
 
 if [ $? -ne 0 ];then
-  echo "check check_build_result.sh fail"
+  echo "check ${0} fail"
   exit 1
 else
-  echo "check check_build_result.sh success"
+  echo "check ${0} success"
 fi

@@ -31,4 +31,5 @@ RUN source /etc/profile
 RUN echo 'source /etc/profile'   >> ~/.bashrc
 
 #设置容器启动时执行的命令
-CMD ["bash","-c","tail -f /dev/null"]
+#tail -f /dev/null 是为了 Docker容器后台运行,就必须有一个前台进程
+CMD ["bash","-c","cd /home/StiBel/DockerBuild && ./run.sh && tail -f /dev/null"]

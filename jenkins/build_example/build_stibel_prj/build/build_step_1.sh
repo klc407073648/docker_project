@@ -36,12 +36,17 @@ function cleanRunContainer()
 
 function MAIN() 
 {
-  logDebug "clean_build_env.sh MAIN begin"
+  logError "${0}:clean_build_env begin"
   cleanBuildEnv
   cleanRunContainer
-  logDebug "clean_build_env.sh MAIN end"
+  logError "${0}:clean_build_env end"
 }
 
 MAIN
 
-checkExecResult "clean_build_env.sh"
+if [ $? -ne 0 ];then
+  echo "check ${0} fail"
+  exit 1
+else
+  echo "check ${0} success"
+fi

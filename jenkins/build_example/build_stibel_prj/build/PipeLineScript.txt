@@ -1,0 +1,50 @@
+pipeline {
+    agent none
+
+    stages {
+        stage('clean_build_env') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/build'){
+                   sh "./build_step_1.sh" 
+                }
+            }
+        }
+        
+        stage('build_lib') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/build'){
+                   sh "./build_step_2.sh"
+                }
+            }
+        }
+
+        stage('check_build_result') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/build'){
+                   sh "./build_step_3.sh"
+                }
+            }
+        }
+
+        stage('build_stibel_prj') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/build'){
+                   sh "./build_step_4.sh"
+                }
+            }
+        }
+
+        stage('tar_stibel_prj') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/jenkins/test/build'){
+                   sh "./build_step_5.sh"
+                }
+            }
+        }
+    }
+}

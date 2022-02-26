@@ -81,19 +81,19 @@ function buildLib()
 
 function MAIN() 
 {
-  logDebug "build_lib.sh MAIN begin"
+  logError "${0}:build_lib begin"
   printEnvInfo
   cleanRunContainer
   downloadCode
   buildLib
-  logDebug "build_lib.sh MAIN end"
+  logError "${0}:build_lib end"
 }
 
 MAIN
 
 if [ $? -ne 0 ];then
-  echo "check build_lib.sh fail"
+  echo "check ${0} fail"
   exit 1
 else
-  echo "check build_lib.sh success"
+  echo "check ${0} success"
 fi

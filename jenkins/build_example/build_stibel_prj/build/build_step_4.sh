@@ -80,19 +80,19 @@ function buildStiBelProject()
 
 function MAIN() 
 {
-  logDebug "build_stibel_prj.sh MAIN begin"
+  logError "${0}:build_stibel_prj begin"
   printEnvInfo
   cleanRunContainer
   downloadCode
   buildStiBelProject
-  logDebug "build_stibel_prj.sh MAIN end"
+  logError "${0}:build_stibel_prj end"
 }
 
 MAIN
 
 if [ $? -ne 0 ];then
-  echo "check build_stibel_prj.sh fail"
+  echo "check ${0} fail"
   exit 1
 else
-  echo "check build_stibel_prj.sh success"
+  echo "check ${0} success"
 fi

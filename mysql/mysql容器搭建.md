@@ -215,3 +215,12 @@ angular界面查询指令：
 
 ![angular_search](./images/angular_search.png)
 
+
+
+GRANT ALL ON *.* TO 'root'@'%';
+flush privileges;
+ALTER USER 'root'@'localhost' IDENTIFIED BY '456789' PASSWORD EXPIRE NEVER;
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '456789';
+flush privileges;
+
+https://blog.csdn.net/sinat_34974437/article/details/104431289

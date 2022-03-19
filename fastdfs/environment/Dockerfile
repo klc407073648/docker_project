@@ -30,21 +30,21 @@ RUN mkdir /root/fastdfs/tracker   \
   &&  make && make install
 
 # 配置 FastDFS 跟踪器
-ADD tracker.conf /etc/fdfs
+COPY tracker.conf /etc/fdfs
 
 # 配置 FastDFS 存储
-ADD storage.conf /etc/fdfs
+COPY storage.conf /etc/fdfs
 
 # 配置 FastDFS 客户端
-ADD client.conf /etc/fdfs
+COPY client.conf /etc/fdfs
 
-ADD mod_fastdfs.conf /etc/fdfs
+COPY mod_fastdfs.conf /etc/fdfs
 
 WORKDIR /usr/local/src/fastdfs-6.07/conf
 RUN cp http.conf mime.types /etc/fdfs/
 
 # 配置 Nginx
-ADD nginx.conf /usr/local/nginx/conf
+COPY nginx.conf /usr/local/nginx/conf
 
 # Entrypoint设置在运行容器时将首先执行的命令和参数
 COPY entrypoint.sh /usr/local/bin/
@@ -53,4 +53,5 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 WORKDIR /
 EXPOSE 8888
+
 CMD ["/bin/bash"]

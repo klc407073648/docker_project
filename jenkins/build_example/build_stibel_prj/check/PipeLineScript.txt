@@ -6,7 +6,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test'){
-                   sh "./prepare_step_1.sh" 
+                   sh "./prepare_build_env.sh" 
                 }
             }
         }

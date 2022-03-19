@@ -6,7 +6,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/deploy'){
-                   sh "./deploy_step_1.sh" 
+                   sh "./clean_build_env.sh" 
                 }
             }
         }
@@ -15,7 +15,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/deploy'){
-                   sh "./deploy_step_2.sh" 
+                   sh "./modify_env_var.sh" 
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/deploy'){
-                   sh "./deploy_step_3.sh" 
+                   sh "./deploy_stibel_prj.sh" 
                 }
             }
         }

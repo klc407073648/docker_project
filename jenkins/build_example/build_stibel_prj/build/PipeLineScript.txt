@@ -6,7 +6,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/build'){
-                   sh "./build_step_1.sh" 
+                   sh "./clean_before_build.sh" 
                 }
             }
         }
@@ -15,7 +15,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/build'){
-                   sh "./build_step_2.sh"
+                   sh "./build_lib.sh"
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/build'){
-                   sh "./build_step_3.sh"
+                   sh "./check_build_result.sh"
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/build'){
-                   sh "./build_step_4.sh"
+                   sh "./build_stibel_prj.sh"
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/build'){
-                   sh "./build_step_5.sh"
+                   sh "./tar_stibel_prj.sh"
                 }
             }
         }
@@ -51,7 +51,7 @@ pipeline {
             agent {label 'node1'}
             steps {
                 dir('/home/jenkins/test/build'){
-                   sh "./build_step_6.sh"
+                   sh "./clean_after_build.sh"
                 }
             }
         }

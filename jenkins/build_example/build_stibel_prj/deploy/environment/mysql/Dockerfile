@@ -10,10 +10,10 @@ ARG MYSQL_DATABASE
 ENV MYSQL_ALLOW_EMPTY_PASSWORD yes
 
 #创建文件目录
-RUN mkdir -p /home/mysql
-RUN mkdir -p /mysql/sql/docker_mysql
-RUN mkdir -p /mysql/sql/student
-RUN mkdir -p /mysql/sql/privileges
+RUN mkdir -p /home/mysql   \
+    &&  mkdir -p /mysql/sql/docker_mysql   \
+    &&  mkdir -p /mysql/sql/student   \
+    &&  mkdir -p /mysql/sql/privileges
  
 #将所需文件放到容器中
 COPY setup.sh /mysql/setup.sh

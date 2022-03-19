@@ -24,6 +24,10 @@ clean_build_env.sh 	——>	build_lib.sh	——>	check_build_result.sh	——> 	
 
 以PipeLine的任务来构建，各个任务之间采用串行运行。
 
+## 使用方法
+
+将prepare  下的脚本拷贝至 /home/jenkins/test/ 路径下，然后启动jenkins上的prepare任务即可
+
 # 构建过程
 
 ## 预处理
@@ -177,6 +181,6 @@ pipeline {
 
 - [ ] 流水线的构建还需要加入脚本执行失败的校验，或者去校验生成物是否存在
 - [ ] 下一步，整理脚本的内容，提取一些公共方法，使得逻辑清晰整洁
-- [ ] 分多个进程来处理，解耦先参考其他项目，分redis进程，mysql进程
+- [ ] 分多个进程来处理，解耦先参考其他项目，分redis进程，mysql进程，es进程
 - [x] Docker容器后台运行,就必须有一个前台进程,因此 在webserver的dockerfile的CMD里加入tail -f /dev/null
 

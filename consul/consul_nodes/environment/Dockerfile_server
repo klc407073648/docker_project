@@ -1,0 +1,32 @@
+FROM centos:centos7
+
+#docker-compose.yml的构建参数
+ARG CONSUL_TYPE
+
+#软件安装
+RUN  yum install -y zip unzip dos2unix
+
+#将所需文件放到容器中
+RUN  mkdir -p   /home/consul           \
+    && mkdir -p   /home/consul/shell   \
+    && mkdir -p   /home/consul/data    \
+    && mkdir -p   /home/consul/conf    \
+    && mkdir -p   /home/consul/log     
+
+#将所需文件放到容器中
+COPY ./src/consul_1.11.4_linux_amd64.zip    /home/consul
+COPY ./conf/server.json                     /home/consul/conf
+COPY ./shell/start.sh                       /home/consul/shell
+
+##解压文件,赋值权限
+RUN  cd /home/consul && unzip consul_1.11.4_linux_amd64.zip -d /usr/local/bin   \
+    && cd /home/consul/shell && chmod 777 *.sh && dos2unix *.sh
+
+# 注册环境变量
+RUN echo 'export CONSUL_HOME=/usr/local/bin/consul'  >> /etc/profile   \
+    && echo 'export PATH=$PATH:CONSUL_HOME'  >> /etc/profile   \
+    && echo 'source /etc/profile'   >> ~/.bashrc   \
+    && source /etc/profile     
+
+#设置容器启动时执行的命令
+CMD ["bash","-c","cd /home/consul/shell && ./start.sh server start && tail -f /dev/null"]

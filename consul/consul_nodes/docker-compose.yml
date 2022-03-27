@@ -1,0 +1,40 @@
+version: '3.1'
+
+networks:
+  consul_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${PROJECT_NETWORK_SUBNET}
+          gateway: ${PROJECT_NETWORK_GATEWAY}
+
+services:
+  consul_server:
+    build:
+      context: ./environment
+      dockerfile: Dockerfile_server
+      args:
+        - CONSUL_SERVER_DATA_DIR=${CONSUL_SERVER_DATA_DIR}
+    image: "${CONSUL_SERVER_IMAGE_NAME}:${CONSUL_SERVER_IMAGE_TAR}"
+    restart: always
+    container_name: "${CONSUL_SERVER_CONTAINER_NAME}"
+    ports:
+       - "${CONSUL_SERVER_HTTP_PORT}:8500"
+    networks:
+      consul_net:
+        ipv4_address: ${CONSUL_SERVER_HOST_IP}
+
+  consul_client:
+    build:
+      context: ./environment
+      dockerfile: Dockerfile_client
+      args:
+        - CONSUL_SERVER_HOST_IP=${CONSUL_SERVER_HOST_IP}
+    image: "${CONSUL_CLIENT_IMAGE_NAME}:${CONSUL_CLIENT_IMAGE_TAR}"
+    restart: always
+    container_name: "${CONSUL_CLIENT_CONTAINER_NAME}"
+    networks:
+      consul_net:
+        ipv4_address: ${CONSUL_CLIENT_HOST_IP}
+

@@ -19,13 +19,9 @@ docker pull apolloconfig/apollo-configservice:${version}
 ```bash
 
 docker run -p 8080:8080 \
-
   -e SPRING_DATASOURCE_URL="jdbc:mysql://fill-in-the-correct-server:3306/ApolloConfigDB?characterEncoding=utf8" \
-
   -e SPRING_DATASOURCE_USERNAME=FillInCorrectUser -e SPRING_DATASOURCE_PASSWORD=FillInCorrectPassword \
-
   -d -v /tmp/logs:/opt/logs --name apollo-configservice apolloconfig/apollo-configservice:${version}
-
 ```
 
 参数说明：
@@ -53,13 +49,9 @@ docker pull apolloconfig/apollo-adminservice:${version}
 ```bash
 
 docker run -p 8090:8090 \
-
   -e SPRING_DATASOURCE_URL="jdbc:mysql://fill-in-the-correct-server:3306/ApolloConfigDB?characterEncoding=utf8" \
-
   -e SPRING_DATASOURCE_USERNAME=FillInCorrectUser -e SPRING_DATASOURCE_PASSWORD=FillInCorrectPassword \
-
   -d -v /tmp/logs:/opt/logs --name apollo-adminservice apolloconfig/apollo-adminservice:${version}
-
 ```
 
 参数说明：
@@ -87,17 +79,11 @@ docker pull apolloconfig/apollo-portal:${version}
 ```bash
 
 docker run -p 8070:8070 \
-
   -e SPRING_DATASOURCE_URL="jdbc:mysql://fill-in-the-correct-server:3306/ApolloPortalDB?characterEncoding=utf8" \
-
   -e SPRING_DATASOURCE_USERNAME=FillInCorrectUser -e SPRING_DATASOURCE_PASSWORD=FillInCorrectPassword \
-
   -e APOLLO_PORTAL_ENVS=dev,pro \
-
   -e DEV_META=http://fill-in-dev-meta-server:8080 -e PRO_META=http://fill-in-pro-meta-server:8080 \
-
   -d -v /tmp/logs:/opt/logs --name apollo-portal apolloconfig/apollo-portal:${version}
-
 ```
 
 参数说明：
@@ -110,16 +96,16 @@ docker run -p 8070:8070 \
 
 ## 构建示例
 
-apollo的构建脚本如下：
+apollo的构建脚本如下，1.1.1.1为虚机的ip：
 
 ```
 docker run -p 8080:8080 \
-    -e SPRING_DATASOURCE_URL="jdbc:mysql://139.196.82.84:3307/ApolloConfigDB?characterEncoding=utf8" \
+    -e SPRING_DATASOURCE_URL="jdbc:mysql://1.1.1.1:3307/ApolloConfigDB?characterEncoding=utf8" \
     -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD=456789 \
     -d -v /tmp/logs:/opt/logs --name apollo-configservice apolloconfig/apollo-configservice:1.9.2
 
 docker run -p 8090:8090 \
-    -e SPRING_DATASOURCE_URL="jdbc:mysql://139.196.82.84:3307/ApolloConfigDB?characterEncoding=utf8" \
+    -e SPRING_DATASOURCE_URL="jdbc:mysql://1.1.1.1:3307/ApolloConfigDB?characterEncoding=utf8" \
     -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD=456789 \
     -d -v /tmp/logs:/opt/logs --name apollo-adminservice apolloconfig/apollo-adminservice:1.9.2
     
@@ -127,7 +113,7 @@ docker run -p 8070:8070 \
     -e SPRING_DATASOURCE_URL="jdbc:mysql://139.196.82.84:3307/ApolloPortalDB?characterEncoding=utf8" \
     -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD=456789 \
     -e APOLLO_PORTAL_ENVS=dev \
-    -e DEV_META=http://139.196.82.84:8080 \
+    -e DEV_META=http://1.1.1.1:8080 \
     -d -v /tmp/logs:/opt/logs --name apollo-portal apolloconfig/apollo-portal:1.9.2
 ```
 

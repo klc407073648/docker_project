@@ -1,6 +1,15 @@
 #/bin/bash
 project_name='stibel'
 
+function modify_env_var() 
+{
+    echo "begin to modify_env_var"
+
+    sed -i "s/\$EUREKA_SERVICE_HOST/139.196.82.84/g" ./environment/mysql.env
+
+    echo "end to modify_env_var"
+}
+
 function build_docker_project()
 {
     docker_name=$1
@@ -22,4 +31,5 @@ function build_docker_project()
     echo "end to build ${project_name}_${docker_name}"
 }
 
+modify_env_var
 build_docker_project "mysql" "v1.0"

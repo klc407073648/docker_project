@@ -1,0 +1,41 @@
+version: "3"
+ 
+services:
+  apollo-configservice:                                        
+    container_name: "${APOLLO_PROJECT_NAME}_configservice_0"                   
+    image: apolloconfig/apollo-configservice:1.9.2       
+    restart: always                
+    ports:
+      - "${APOLLO_CONFIG_SERVICE_PORT}:8080"    
+    volumes:
+      - "${LOG_PATH}:/opt/logs"
+    environment:
+      - spring_datasource_url=${SPRING_CONFIG_DATASOURCE_URL}
+      - spring_datasource_username=${SPRING_DATASOURCE_USERNAME}
+      - spring_datasource_password=${SPRING_DATASOURCE_PASSWORD}
+  apollo-adminservice:
+    container_name: "${APOLLO_PROJECT_NAME}_adminservice_0"                   
+    image: apolloconfig/apollo-adminservice:1.9.2   
+    restart: always                    
+    ports:
+      - "${APOLLO_ADMIN_SERVICE_PORT}:8090"    
+    volumes:
+      - "${LOG_PATH}:/opt/logs"
+    environment:
+      - spring_datasource_url=${SPRING_CONFIG_DATASOURCE_URL}
+      - spring_datasource_username=${SPRING_DATASOURCE_USERNAME}
+      - spring_datasource_password=${SPRING_DATASOURCE_PASSWORD}
+  apollo-portal:
+    container_name: "${APOLLO_PROJECT_NAME}_portal_0"                   
+    image: apolloconfig/apollo-portal:1.9.2   
+    restart: always                    
+    ports:
+      - "${APOLLO_PORTAL_PORT}:8070"    
+    volumes:
+      - "${LOG_PATH}:/opt/logs"
+    environment:
+      - spring_datasource_url=${SPRING_PORTAL_DATASOURCE_URL}
+      - spring_datasource_username=${SPRING_DATASOURCE_USERNAME}
+      - spring_datasource_password=${SPRING_DATASOURCE_PASSWORD}
+      - apollo_portal_envs=${APOLLO_PORTAL_ENVS}
+      - dev_meta=${DEV_META} 

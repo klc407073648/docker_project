@@ -21,6 +21,9 @@ mysql < /mysql/sql/student/create_table.sql
 mysql < /mysql/sql/student/init_data.sql 
 mysql < /mysql/sql/student/update_data.sql
 
+mysql < /mysql/sql/apollo/apolloconfigdb.sql  
+mysql < /mysql/sql/apollo/apolloportaldb.sql
+
 echo '3.导入数据完毕....'
  
 sleep 3

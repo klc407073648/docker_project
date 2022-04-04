@@ -10,6 +10,7 @@ services:
         - MYSQL_USER=${MYSQL_USER}
         - MYSQL_PASSWORD=${MYSQL_PASSWORD}
         - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - EUREKA_SERVICE_HOST=${EUREKA_SERVICE_HOST}
     image: "${MYSQL_IMAGE_NAME}:${MYSQL_IMAGE_TAR}"
     restart: always
     container_name: "${MYSQL_CONTAINER_NAME}"

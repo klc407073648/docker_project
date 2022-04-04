@@ -1,0 +1,23 @@
+{
+	"datacenter": "datacenter1",
+	"data_dir": "/home/consul/data",
+	"node_name": "client_node",
+	"server": false,
+	"ui": false,
+	"bind_addr": "0.0.0.0",
+	"client_addr": "0.0.0.0",
+	"retry_join": [
+		"$CONSUL_SERVER_HOST_IP"
+	],
+	"ports": {
+		"server": 8300,
+		"serf_lan": 8301,
+		"serf_wan": 8302,
+		"http": 8500,
+		"dns": 8600
+	},
+	"log_file": "/home/consul/log/consul.log",
+	"log_level": "INFO",
+	"log_rotate_bytes": 10240000,
+	"log_rotate_duration": "24h"
+}

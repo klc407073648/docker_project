@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  consul:
+    build:
+      context: ./environment
+      dockerfile: Dockerfile
+      args:
+        - CONSUL_DATA_DIR=${CONSUL_DATA_DIR}
+    image: "${CONSUL_IMAGE_NAME}:${CONSUL_IMAGE_TAR}"
+    restart: always
+    container_name: "${CONSUL_CONTAINER_NAME}"

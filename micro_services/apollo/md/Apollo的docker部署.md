@@ -127,22 +127,32 @@ f07ee3c50d6c        apolloconfig/apollo-portal:1.9.2          "/apollo-portal/sc
 1db9f8b2affa        apolloconfig/apollo-configservice:1.9.2   "/apollo-configser..."   11 minutes ago      Up 11 minutes         0.0.0.0:8080->8080/tcp   
 ```
 
-## 通过源码构建 Docker 镜像
+# docker-compose方式构建
 
-如果修改了 apollo 服务端的代码，希望通过源码构建 Docker 镜像，可以参考下面的步骤：
+1. 启动mysql数据库的内容
 
-1. 通过源码构建安装包：`./scripts/build.sh`
+   ```
+   [root@iZuf61kbf845xt6tz10abgZ ~]# cd /home/klc/mysql/mysql/
+   [root@iZuf61kbf845xt6tz10abgZ mysql]# ./build_mysql.sh
+   ```
 
-2. 构建 Docker 镜像：`mvn docker:build -pl apollo-configservice,apollo-adminservice,apollo-portal`
+2. 构建apollo的docker容器：
 
-### 之前的版本
+   ```
+   [root@iZuf61kbf845xt6tz10abgZ apollo]# ./build_apollo.sh
+   begin to modify_env_var
+   end to modify_env_var
+   begin to build_apollo
+   Creating network "apollo_default" with the default driver
+   Creating stibel_apollo_configservice_0 ... done
+   Creating stibel_apollo_portal_0        ... done
+   Creating stibel_apollo_adminservice_0  ... done
+   end to build_apollo
+   [root@iZuf61kbf845xt6tz10abgZ apollo]# docker ps
+   CONTAINER ID        IMAGE                                         COMMAND                  CREATED              STATUS                PORTS                                                                NAMES
+   c0be44d97bd3        apolloconfig/apollo-adminservice:1.9.2        "/apollo-adminserv..."   40 seconds ago       Up 38 seconds         0.0.0.0:8090->8090/tcp                                               stibel_apollo_adminservice_0
+   3fa1106bd48c        apolloconfig/apollo-portal:1.9.2              "/apollo-portal/sc..."   40 seconds ago       Up 38 seconds         0.0.0.0:8070->8070/tcp                                               stibel_apollo_portal_0
+   bca74f4ac4e4        apolloconfig/apollo-configservice:1.9.2       "/apollo-configser..."   40 seconds ago       Up 38 seconds         0.0.0.0:8080->8080/tcp                                               stibel_apollo_configservice_0
+   ```
 
-Apollo项目已经自带了Docker file，可以参照[2.2.1 获取安装包](#_221-获取安装包)配置好安装包后通过下面的文件来打Docker镜像：
-
-1. [apollo-configservice](https://github.com/ctripcorp/apollo/blob/master/apollo-configservice/src/main/docker/Dockerfile)
-
-2. [apollo-adminservice](https://github.com/ctripcorp/apollo/blob/master/apollo-adminservice/src/main/docker/Dockerfile)
-
-3. [apollo-portal](https://github.com/ctripcorp/apollo/blob/master/apollo-portal/src/main/docker/Dockerfile)
-
-也可以参考Apollo用户[@kulovecc](https://github.com/kulovecc)的[docker-apollo](https://github.com/kulovecc/docker-apollo)项目和[@idoop](https://github.com/idoop)的[docker-apollo](https://github.com/idoop/docker-apollo)项目。
+   

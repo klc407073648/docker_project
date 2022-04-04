@@ -1,28 +1,24 @@
 #/bin/bash
-project_name='stibel'
-
-function build_docker_project()
+function modify_env_var() 
 {
-    docker_name=$1
-    docker_name_tar=$2
-    echo "begin to clear environment ${project_name}_${docker_name}"
+    echo "begin to modify_env_var"
 
-    docker stop $(docker ps |grep ${project_name}_${docker_name}_0 |awk '{print $1}')
-    docker rm $(docker ps -q -f status=exited)
-    docker rmi ${project_name}_${docker_name}:${docker_name_tar}
+    sed -i "s/\$MYSQL_HOST_IP/139.196.82.84/g" ./environment/apollo.env
+    sed -i "s/\$MYSQL_PORT/3308/g" ./environment/apollo.env
+    sed -i "s/\$META_SERVICE_IP/139.196.82.84/g" ./environment/apollo.env
 
-    echo "end to clear environment ${project_name}_${docker_name}"
-
-    echo "begin to build ${project_name}_${docker_name}"
-
-    cp ./environment/${docker_name}.env .env
-
-    docker-compose up -d
-
-    echo "end to build ${project_name}_${docker_name}"
+    echo "end to modify_env_var"
 }
 
-#build_docker_project "apollo" "v1.0"
+function build_apollo() 
+{
+    echo "begin to build_apollo"
 
-cp ./environment/apollo.env .env
-docker-compose up -d
+    cp ./environment/apollo.env .env
+    docker-compose up -d
+
+    echo "end to build_apollo"
+}
+
+modify_env_var
+build_apollo

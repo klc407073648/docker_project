@@ -9,10 +9,10 @@ import (
 
 func main() {
 	c := &config.AppConfig{
-		AppID:          "sampleApp2",
+		AppID:          "apolloUseTest",
 		Cluster:        "dev",
 		IP:             "http://139.196.82.84:8080",
-		NamespaceName:  "TEST1.dubbo",
+		NamespaceName:  "TEST1.mysql",
 		IsBackupConfig: true,
 		Secret:         "7c2ddeb1cd344b8b8db185b3d8641e7f",
 	}
@@ -30,10 +30,10 @@ func main() {
 	checkKey(c.NamespaceName,client)
 
 	c = &config.AppConfig{
-		AppID:          "sampleApp2",
+		AppID:          "apolloUseTest",
 		Cluster:        "dev",
 		IP:             "http://139.196.82.84:8080",
-		NamespaceName:  "TEST1.dubbo",
+		NamespaceName:  "TEST1.mysql",
 		IsBackupConfig: false,
 		Secret:         "7c2ddeb1cd344b8b8db185b3d8641e7f",
 	}

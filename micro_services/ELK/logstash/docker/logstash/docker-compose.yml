@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  logstash:
+    image: logstash:7.2.0
+    container_name: stibel_logstash
+    restart: always
+    volumes:
+      - ./config:/usr/share/logstash/config
+      - ./data:/usr/share/logstash/data
+      - ./pipeline:/usr/share/logstash/pipeline
+    ports:
+      - 4560:4560

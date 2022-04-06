@@ -4,7 +4,7 @@ version: '3'
 # docker network create es-net  
 services:
   elasticsearch_n0:
-    image: elasticsearch:7.2.0
+    image: elasticsearch:7.12.1
     container_name: elasticsearch_n0
     privileged: true
     environment:
@@ -19,7 +19,7 @@ services:
     networks:
       - es-net
   kibana:
-    image: kibana:7.2.0
+    image: kibana:7.12.1
     container_name: kibana
     environment:
       - "ELASTICSEARCH_HOSTS=http://elasticsearch_n0:9200"

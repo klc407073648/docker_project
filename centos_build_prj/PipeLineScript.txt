@@ -1,0 +1,45 @@
+{
+    agent none
+
+    stages {
+        // 构建前清理环境
+        stage('clean_before_build') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/klc/auto_job/build_lib'){
+                   sh "./clean_before_build.sh" 
+                }
+            }
+        }
+        
+        // 构建公共库文件
+        stage('build_lib') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/klc/auto_job/build_lib'){
+                   sh "./build_lib.sh"
+                }
+            }
+        }
+
+        // 校验构建库的demo程序
+        stage('check_build_result') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/klc/auto_job/build_lib'){
+                   sh "./check_build_result.sh"
+                }
+            }
+        }
+
+        // 清理构建后的环境
+        stage('clean_after_build') {
+            agent {label 'node1'}
+            steps {
+                dir('/home/klc/auto_job/build_lib'){
+                   sh "./clean_after_build.sh"
+                }
+            }
+        }
+    }
+}

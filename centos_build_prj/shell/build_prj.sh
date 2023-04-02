@@ -86,9 +86,9 @@ function buildBackendImageAndRun()
 
     docker build -t ${prefix_name}:${image_tar} .
     if [ "$code_path"x = "friendFinder"x ]; then
-      port=8091
+      port=8086
     elif [ "$code_path"x = "userCenter"x ]; then
-      port=8092
+      port=8087
     fi
 
     docker run -p ${port}:8080 -d --name ${prefix_name}_${suf_fix} ${prefix_name}:${image_tar}
@@ -140,9 +140,9 @@ function buildFrontendImageAndRun()
 
     docker build -t ${prefix_name}:${image_tar} .
     if [ "$code_path"x = "friendFinder"x ]; then
-      port=8090
-    elif [ "$code_path"x = "userCenter"x ]; then
       port=8091
+    elif [ "$code_path"x = "userCenter"x ]; then
+      port=8092
     fi
 
     docker run -p ${port}:80 -d --name ${prefix_name}_${suf_fix} ${prefix_name}:${image_tar}
@@ -158,8 +158,8 @@ function MAIN()
   downloadCode
   buildFrontendPrj
   buildFrontendImageAndRun
-  #buildBackendPrj
-  #buildBackendImageAndRun
+  buildBackendPrj
+  buildBackendImageAndRun
   logError "${0}:build_prj end"
 }
 

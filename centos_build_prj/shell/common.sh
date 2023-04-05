@@ -2,7 +2,7 @@
 
 # 项目名称、当前路径、构建镜像版本，运行容器后缀
 export project_name=stibel
-export cur_path=`pwd`
+export cur_path=$(pwd)
 export image_tar='v0.0.1'
 export suf_num='0'
 
@@ -23,7 +23,7 @@ export cpp_backend_image_name='docker.io/klc407073648/centos_build_lib:v3.0'
 export container_list="${frontend_container_name} ${java_backend_container_name} ${cpp_backend_container_name}"
 export image_list="${frontend_image_name} ${java_backend_image_name} ${cpp_backend_image_name}"
 export code_download_path=${cur_path}/download
-export code_list='friendFinder' #userCenter openApi cmd-terminal
+export code_list='cmd-terminal' #userCenter friendFinder√ openApi cmd-terminal√
 
 export deploy_container_list='user-center-frontend user-center-backend'
 
@@ -47,117 +47,152 @@ logErrorNum=1
 isSave=1
 
 #写日志
-function write_log()
-{
-  if [ ! -d ${log_dir} ];then
-	 mkdir -p ${log_dir} 
-  fi
-  
-  if [ ! -f ${log_file} ];then
-	 touch  ${log_file} 
-  fi
-  
-  fileCount=`ls ${log_dir}/*.log |wc -l`
-  
-  if [ ${fileCount} -gt 10 ];then
-     find ${log_dir} -type f |xargs ls -tr | head -5 | xargs rm
-  fi
-  
-  echo -n `date "+%Y-%m-%d %T "` >>${log_file}
-  echo " $1" >>${log_file}
-  
-  return 0
+function write_log() {
+   if [ ! -d ${log_dir} ]; then
+      mkdir -p ${log_dir}
+   fi
+
+   if [ ! -f ${log_file} ]; then
+      touch ${log_file}
+   fi
+
+   fileCount=$(ls ${log_dir}/*.log | wc -l)
+
+   if [ ${fileCount} -gt 10 ]; then
+      find ${log_dir} -type f | xargs ls -tr | head -5 | xargs rm
+   fi
+
+   echo -n $(date "+%Y-%m-%d %T ") >>${log_file}
+   echo " $1" >>${log_file}
+
+   return 0
 }
 
 #日志打印函数
 #四个级别:Debug、Info、Warn、Error
 
 # Debug日志
-function logDebug()
-{
-   if [ $log_level -ge $logDebugNum ];then 
+function logDebug() {
+   if [ $log_level -ge $logDebugNum ]; then
       echo -e "\033[32m-- $1 --\033[0m"
    fi
 
-   if [ $isSave -eq 1 ];then 
+   if [ $isSave -eq 1 ]; then
       write_log "$1"
    fi
 }
 
 # Info日志
-function logInfo()
-{
-   if [ $log_level -ge $logInfoNum ];then 
+function logInfo() {
+   if [ $log_level -ge $logInfoNum ]; then
       echo -e "\033[36m-- $1 --\033[0m"
    fi
 
-   if [ $isSave -eq 1 ];then 
+   if [ $isSave -eq 1 ]; then
       write_log "$1"
    fi
 }
 
 # Warn日志
-function logWarn()
-{
-   if [ $log_level -ge $logWarnNum ];then 
+function logWarn() {
+   if [ $log_level -ge $logWarnNum ]; then
       echo -e "\033[33m-- $1 --\033[0m"
    fi
 
-   if [ $isSave -eq 1 ];then 
+   if [ $isSave -eq 1 ]; then
       write_log "$1"
    fi
 }
 
 # Error日志
-function logError()
-{
-   if [ $log_level -ge $logErrorNum ];then
+function logError() {
+   if [ $log_level -ge $logErrorNum ]; then
       echo -e "\033[31m-- $1 --\033[0m"
    fi
 
-   if [ $isSave -eq 1 ];then 
+   if [ $isSave -eq 1 ]; then
       write_log "$1"
    fi
 }
 
-# 清理运行的容器
-function cleanRunContainer() 
-{
-  logDebug "cleanRunContainer begin"
+# 清理运行的容器(构建)
+function cleanBuildRunContainer() {
+   logDebug "[$FUNCNAME] begin"
 
-  sum=0
-  for container_name in $container_list; do
-    cnt=$(docker ps -a | grep $container_name | wc -l)
-    if [ "$cnt"x = "1"x ]; then
-      sum=`expr $sum + $cnt`
-      logInfo "docker stop $container_name"
-      docker stop $container_name
-    fi
-  done
+   sum=0
+   for container_name in $container_list; do
+      cnt=$(docker ps -a | grep $container_name | wc -l)
+      if [ "$cnt"x = "1"x ]; then
+         sum=$(expr $sum + $cnt)
+         logInfo "docker stop $container_name"
+         docker stop $container_name
+      fi
+   done
 
-  if [ "$sum"x != "0"x ]; then
-    docker rm $(docker ps -q -f status=exited)
-  fi
+   if [ "$sum"x != "0"x ]; then
+      logInfo "docker rm container(status=exited)"
+      docker rm $(docker ps -q -f status=exited)
+   fi
 
-  logDebug "cleanRunContainer end"
+   logDebug "[$FUNCNAME] end"
+}
+
+# 清理运行的容器和镜像(项目)
+function cleanPrjRunContainerAndImage() {
+   logDebug "[$FUNCNAME] begin"
+
+   logInfo "[$FUNCNAME] clean frontend begin"
+
+   for code_path in $code_list; do
+      frontend_prefix_name=$(echo "${code_path}-frontend" | tr '[A-Z]' '[a-z]')
+
+      cnt=$(docker ps -a | grep ${frontend_prefix_name}_${suf_num} | wc -l)
+      if [ "$cnt"x = "1"x ]; then
+         logInfo "docker stop and rm ${frontend_prefix_name}_${suf_num}"
+         docker stop ${frontend_prefix_name}_${suf_num}
+         docker rm ${frontend_prefix_name}_${suf_num}
+
+         logInfo "docker rmi ${frontend_prefix_name}:${image_tar}"
+         docker rmi ${frontend_prefix_name}:${image_tar}
+      fi
+   done
+
+   logInfo "[$FUNCNAME] clean frontend end"
+
+   logInfo "[$FUNCNAME] clean backend begin"
+
+   for code_path in $code_list; do
+      backend_prefix_name=$(echo "${code_path}-backend" | tr '[A-Z]' '[a-z]')
+
+      cnt=$(docker ps -a | grep ${frontend_prefix_name}_${suf_num} | wc -l)
+      if [ "$cnt"x = "1"x ]; then
+         logInfo "docker stop and rm ${backend_prefix_name}_${suf_num}"
+         docker stop ${backend_prefix_name}_${suf_num}
+         docker rm ${backend_prefix_name}_${suf_num}
+
+         logInfo "docker rmi ${backend_prefix_name}:${image_tar}"
+         docker rmi ${backend_prefix_name}:${image_tar}
+      fi
+   done
+
+   logInfo "[$FUNCNAME] clean backend end"
+
+   logDebug "[$FUNCNAME] end"
 }
 
 # 校验执行结果
-function checkExecResult()
-{
-   if [ $? -ne 0 ];then
-       write_log "check $1 fail"  && logError "check $1 fail"
-       exit 1
+function checkExecResult() {
+   if [ $? -ne 0 ]; then
+      write_log "check $1 fail" && logError "check $1 fail"
+      exit 1
    else
-       write_log "check $1 success"  && logInfo "check $1 success"
+      write_log "check $1 success" && logInfo "check $1 success"
    fi
 }
 
-
 # 校验执行结果
-function checkMainResult()
-{
-   if [ $? -ne 0 ];then
+function checkMainResult() {
+   if [ $? -ne 0 ]; then
       echo "check ${0} fail"
       exit 1
    else

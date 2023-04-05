@@ -156,8 +156,6 @@ function buildFrontendImageAndRun() {
   for code_path in $code_list; do
     prefix_name=$(echo "${code_path}-frontend" | tr '[A-Z]' '[a-z]')
 
-    cleanContainerAndImage
-
     logWarn "docker build -t ${prefix_name}:${image_tar}  ."
 
     cd ${code_download_path}/${code_path}/frontend
@@ -249,11 +247,15 @@ function cmdTerminalBackend() {
 
   cd ${cur_path}
   modifyFileVar ${code_download_path}/${code_path}/cpp-backend config-prod.json ${code_path}
+  cp -rf ${code_download_path}/${code_path}/cpp-backend/config-prod.json ${code_download_path}/${code_path}/cpp-backend/config.json 
 
   logWarn "[$FUNCNAME] build ${code_path} backend"
 
-  docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
-  cd ${code_download_path}/${code_path}/cpp-backend/build && chmod 777 *.sh && ./build.sh"
+  # TODO临时处理，后续确定路径
+  cp /home/stibel/StiBel_V2.1.1.tar.gz ${code_download_path}/${code_path}/cpp-backend/
+
+  docker exec -i ${cpp_backend_container_name} /bin/sh -c "source /etc/profile &&  \
+  cd ${code_download_path}/${code_path}/cpp-backend/ && chmod 777 *.sh && ./build.sh"
 
   logDebug "[$FUNCNAME] begin"
 }
@@ -286,8 +288,6 @@ function buildJavaBackendImageAndRun() {
 
   prefix_name=$(echo "${code_path}-backend" | tr '[A-Z]' '[a-z]')
 
-  cleanContainerAndImage
-
   logWarn "docker build -t ${prefix_name}:${image_tar}  ."
   cd ${code_download_path}/${code_path}/backend
 
@@ -307,21 +307,6 @@ function buildCppBackendImageAndRun() {
 
   local port=$1
   cd ${code_download_path}
-
-  logDebug "[$FUNCNAME] end"
-}
-
-function cleanContainerAndImage() {
-  logDebug "[$FUNCNAME] begin"
-
-  logInfo "${prefix_name} clean container and image"
-
-  cnt=$(docker ps -a | grep ${prefix_name}_${suf_num} | wc -l)
-  if [ "$cnt"x = "1"x ]; then
-    docker stop ${prefix_name}_${suf_num}
-    docker rm ${prefix_name}_${suf_num}
-    docker rmi ${prefix_name}:${image_tar}
-  fi
 
   logDebug "[$FUNCNAME] end"
 }

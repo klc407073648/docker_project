@@ -17,7 +17,8 @@ function MAIN()
 {
   logError "${0}:clean_before_build begin"
   cleanBuildEnv
-  cleanRunContainer
+  cleanBuildRunContainer
+  cleanPrjRunContainerAndImage
   logError "${0}:clean_before_build end"
 }
 

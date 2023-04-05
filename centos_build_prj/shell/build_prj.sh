@@ -1,9 +1,10 @@
 #!/bin/bash
 source ./common.sh
+source ./fun/config_file_deal.sh
 
 #打印环境变量
 function printEnvInfo() {
-  logDebug "printEnvInfo begin"
+  logDebug "[$FUNCNAME] begin"
 
   if [ ! -d ${code_download_path} ]; then
     mkdir -p ${code_download_path}
@@ -14,12 +15,20 @@ function printEnvInfo() {
   logInfo "code_download_path:[${code_download_path}]"
   logInfo "code_list:[${code_list}]"
 
-  logDebug "printEnvInfo end"
+  logDebug "[$FUNCNAME] end"
+}
+
+function dealConfigFile() {
+  logDebug "[$FUNCNAME] begin"
+
+  parseConfigFile
+
+  logDebug "[$FUNCNAME] end"
 }
 
 #下载代码
 function downloadCode() {
-  logDebug "downloadCode begin"
+  logDebug "[$FUNCNAME] begin"
 
   cd $code_download_path
 
@@ -35,11 +44,11 @@ function downloadCode() {
 
   checkExecResult downloadCode
 
-  logDebug "downloadCode end"
+  logDebug "[$FUNCNAME] end"
 }
 
 function runBuildEnv() {
-  logDebug "runBuildEnv begin"
+  logDebug "[$FUNCNAME] begin"
 
   # 前端构建环境
   logWarn "docker run ${frontend_container_name}"
@@ -53,56 +62,39 @@ function runBuildEnv() {
 
   # drogon的后端环境，特殊处理，后续整改
   logWarn "docker run ${cpp_backend_container_name}"
-  docker run -it -d -p 8093:8093 -v ${code_download_path}:${code_download_path} --name \
+  docker run -it -d -p ${CMD_TERMINAL_BACKEND_PORT}:${CMD_TERMINAL_BACKEND_PORT} -v ${code_download_path}:${code_download_path} --name \
     ${cpp_backend_container_name} ${cpp_backend_image_name} /bin/bash
 
-  logDebug "runBuildEnv begin"
+  logDebug "[$FUNCNAME] begin"
 }
 
 # 构建前端
 function buildFrontendPrj() {
-  logDebug "buildFrontendPrj begin"
+  logDebug "[$FUNCNAME] begin"
 
   for code_path in $code_list; do
-    if [ "$code_path"x = "friendFinder"x ]; then
-      friendFinderFrontend
-    elif [ "$code_path"x = "userCenter"x ]; then
+    if [ "$code_path"x = "userCenter"x ]; then
       userCenterFrontend
+    elif [ "$code_path"x = "friendFinder"x ]; then
+      friendFinderFrontend
+    elif [ "$code_path"x = "openApi"x ]; then
+      openApiFrontend
     elif [ "$code_path"x = "cmd-terminal"x ]; then
       cmdTerminalFrontend
     fi
   done
 
-  logDebug "buildFrontendPrj end"
-}
-
-function friendFinderFrontend() {
-  logDebug "friendFinderFrontend begin"
-
-  # 修改环境变量信息
-  logInfo "friendFinderFrontend modify_env_var"
-
-  cd ${cur_path}
-  ./modify_env_var.sh ${code_download_path}/${code_path}/frontend/docker/ nginx.conf
-  ./modify_env_var.sh ${code_download_path}/${code_path}/frontend/src/plugins myAxios.ts
-
-  logWarn "friendFinderFrontend build ${code_path} frontend"
-
-  docker exec -i ${frontend_container_name} /bin/sh -c "source /etc/profile &&  \
-    cd ${code_download_path}/${code_path}/frontend  \
-    && yarn install -y && yarn global add vite && vite build"
-
-  logDebug "friendFinderFrontend end"
+  logDebug "[$FUNCNAME] end"
 }
 
 function userCenterFrontend() {
-  logDebug "userCenterFrontend begin"
+  logDebug "[$FUNCNAME] begin"
 
   # 修改环境变量信息
-  logInfo "userCenterFrontend modify_env_var"
+  logInfo "[$FUNCNAME] modify_env_var"
   cd ${cur_path}
-  ./modify_env_var.sh ${code_download_path}/${code_path}/frontend/docker/ nginx.conf
-  ./modify_env_var.sh ${code_download_path}/${code_path}/frontend/src/plugins myAxios.ts
+  modifyFileVar ${code_download_path}/${code_path}/frontend/docker/ nginx.conf ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/frontend/src/plugins myAxios.ts ${code_path}
 
   logWarn "userCenterFrontend build ${code_path} frontend"
 
@@ -110,47 +102,75 @@ function userCenterFrontend() {
     cd ${code_download_path}/${code_path}/frontend  \
     && yarn install -y && yarn global add vite && vite build"
 
-  logDebug "userCenterFrontend end"
+  logDebug "[$FUNCNAME] end"
 }
 
-function cmdTerminalFrontend() {
-  logDebug "cmdTerminalFrontend begin"
+function friendFinderFrontend() {
+  logDebug "[$FUNCNAME] begin"
 
   # 修改环境变量信息
-  logInfo "cmdTerminalFrontend modify_env_var"
-  cd ${cur_path}
-  ./modify_env_var.sh ${code_download_path}/${code_path}/frontend/docker/ nginx.conf
-  ./modify_env_var.sh ${code_download_path}/${code_path}/frontend/ vite.config.ts
+  logInfo "[$FUNCNAME] modify_env_var"
 
-  logWarn "cmdTerminalFrontend build ${code_path} frontend"
+  cd ${cur_path}
+  modifyFileVar ${code_download_path}/${code_path}/frontend/docker/ nginx.conf ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/frontend/src/plugins myAxios.ts ${code_path}
+
+  logWarn "[$FUNCNAME] build ${code_path} frontend"
 
   docker exec -i ${frontend_container_name} /bin/sh -c "source /etc/profile &&  \
     cd ${code_download_path}/${code_path}/frontend  \
     && yarn install -y && yarn global add vite && vite build"
 
-  logDebug "cmdTerminalFrontend end"
+  logDebug "[$FUNCNAME] end"
+}
+
+function openApiFrontend() {
+  logDebug "[$FUNCNAME] begin"
+
+  logDebug "[$FUNCNAME] end"
+}
+
+function cmdTerminalFrontend() {
+  logDebug "[$FUNCNAME] begin"
+
+  # 修改环境变量信息
+  logInfo "[$FUNCNAME] modify_env_var"
+  cd ${cur_path}
+  modifyFileVar ${code_download_path}/${code_path}/frontend/docker/ nginx.conf ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/frontend/ vite.config.ts ${code_path}
+
+  logWarn "[$FUNCNAME] build ${code_path} frontend"
+
+  docker exec -i ${frontend_container_name} /bin/sh -c "source /etc/profile &&  \
+    cd ${code_download_path}/${code_path}/frontend  \
+    && yarn install -y && yarn global add vite && vite build"
+
+  logDebug "[$FUNCNAME] end"
 }
 
 function buildFrontendImageAndRun() {
-  logDebug "buildFrontendImageAndRun begin"
+  logDebug "[$FUNCNAME] begin"
 
-  cd ${code_download_path}/
+  cd ${code_download_path}
 
   for code_path in $code_list; do
     prefix_name=$(echo "${code_path}-frontend" | tr '[A-Z]' '[a-z]')
 
-    cleanContainerAndImage 
+    cleanContainerAndImage
 
     logWarn "docker build -t ${prefix_name}:${image_tar}  ."
 
     cd ${code_download_path}/${code_path}/frontend
     docker build -t ${prefix_name}:${image_tar} .
-    if [ "$code_path"x = "friendFinder"x ]; then
-      port=3000 # TODO解析端口地址不能写死
-    elif [ "$code_path"x = "userCenter"x ]; then
-      port=8086
+
+    if [ "$code_path"x = "userCenter"x ]; then
+      port=$USERCENTER_FRONTEND_PORT
+    elif [ "$code_path"x = "friendFinder"x ]; then
+      port=$FRIENDFINDER_FRONTEND_PORT
+    elif [ "$code_path"x = "openApi"x ]; then
+      port=$OPENAPI_FRONTEND_PORT
     elif [ "$code_path"x = "cmd-terminal"x ]; then
-      port=8087
+      port=$CMD_TERMINAL_FRONTEND_PORT
     fi
 
     logWarn "docker run ${prefix_name}_${suf_num}"
@@ -158,102 +178,115 @@ function buildFrontendImageAndRun() {
     docker run -p ${port}:80 -d --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
   done
 
-  logDebug "buildFrontendImageAndRun end"
+  logDebug "[$FUNCNAME] end"
 }
 
 #构建build_Prj任务 生成jar文件
 function buildBackendPrj() {
-  logDebug "buildBackendPrj begin"
+  logDebug "[$FUNCNAME] begin"
 
   # 修改环境变量信息
   for code_path in $code_list; do
-    if [ "$code_path"x = "friendFinder"x ]; then
-      friendFinderBackend
-    elif [ "$code_path"x = "userCenter"x ]; then
+    if [ "$code_path"x = "userCenter"x ]; then
       userCenterBackend
+    elif [ "$code_path"x = "friendFinder"x ]; then
+      friendFinderBackend
+    elif [ "$code_path"x = "openApi"x ]; then
+      openApiBackend
     elif [ "$code_path"x = "cmd-terminal"x ]; then
       cmdTerminalBackend
     fi
   done
 
-  logDebug "buildBackendPrj end"
-}
-
-function friendFinderBackend() {
-  logDebug "friendFinderBackend begin"
-
-  logInfo "friendFinderBackend modify_env_var"
-
-  cd ${cur_path}
-  ./modify_env_var.sh ${code_download_path}/${code_path}/backend/src/main/resources application-prod.yml
-
-  logWarn "friendFinderBackend build ${code_path} backend"
-
-  docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
-  cd ${code_download_path}/${code_path}/backend && mvn package -DskipTests"
-
-  logDebug "friendFinderBackend begin"
+  logDebug "[$FUNCNAME] end"
 }
 
 function userCenterBackend() {
-  logDebug "userCenterBackend begin"
+  logDebug "[$FUNCNAME] begin"
 
-  logInfo "userCenterBackend modify_env_var"
+  logInfo "[$FUNCNAME] modify_env_var"
 
   cd ${cur_path}
-  ./modify_env_var.sh ${code_download_path}/${code_path}/backend/src/main/resources application-prod.yml
+  modifyFileVar ${code_download_path}/${code_path}/backend/src/main/resources application-prod.yml ${code_path}
 
-  logWarn "userCenterBackend build ${code_path} backend"
+  logWarn "[$FUNCNAME] build ${code_path} backend"
 
   docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
   cd ${code_download_path}/${code_path}/backend && mvn package -DskipTests"
 
-  logDebug "userCenterBackend begin"
+  logDebug "[$FUNCNAME] begin"
+}
+
+function friendFinderBackend() {
+  logDebug "[$FUNCNAME] begin"
+
+  logInfo "[$FUNCNAME] modify_env_var"
+
+  cd ${cur_path}
+  modifyFileVar ${code_download_path}/${code_path}/backend/src/main/resources application-prod.yml ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/backend/src/main/java/com/klc/friendfinder/controller MsgController.java ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/backend/src/main/java/com/klc/friendfinder/controller TeamController.java ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/backend/src/main/java/com/klc/friendfinder/controller UserController.java ${code_path}
+
+  logWarn "[$FUNCNAME] build ${code_path} backend"
+
+  docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
+  cd ${code_download_path}/${code_path}/backend && mvn package -DskipTests"
+
+  logDebug "[$FUNCNAME] begin"
+}
+
+function openApiBackend() {
+  logDebug "[$FUNCNAME] begin"
+
+  logDebug "[$FUNCNAME] begin"
 }
 
 function cmdTerminalBackend() {
-  logDebug "cmdTerminalBackend begin"
+  logDebug "[$FUNCNAME] begin"
 
-  logInfo "cmdTerminalBackend modify_env_var"
+  logInfo "[$FUNCNAME] modify_env_var"
 
   cd ${cur_path}
-  ./modify_env_var.sh ${code_download_path}/${code_path}/cpp-backend config-prod.json
+  modifyFileVar ${code_download_path}/${code_path}/cpp-backend config-prod.json ${code_path}
 
-  logWarn "cmdTerminalBackend build ${code_path} backend"
+  logWarn "[$FUNCNAME] build ${code_path} backend"
 
   docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
   cd ${code_download_path}/${code_path}/cpp-backend/build && chmod 777 *.sh && ./build.sh"
 
-  logDebug "cmdTerminalBackend begin"
+  logDebug "[$FUNCNAME] begin"
 }
 
 function buildBackendImageAndRun() {
-  logDebug "buildBackendImageAndRun begin"
+  logDebug "[$FUNCNAME] begin"
 
-  cd ${code_download_path}/
+  cd ${code_download_path}
 
   for code_path in $code_list; do
-    if [ "$code_path"x = "friendFinder"x ]; then
-      buildJavaBackendImageAndRun 8091
-    elif [ "$code_path"x = "userCenter"x ]; then
-      buildJavaBackendImageAndRun 8092
+    if [ "$code_path"x = "userCenter"x ]; then
+      buildJavaBackendImageAndRun $USERCENTER_BACKEND_PORT
+    elif [ "$code_path"x = "friendFinder"x ]; then
+      buildJavaBackendImageAndRun $FRIENDFINDER_BACKEND_PORT
+    elif [ "$code_path"x = "openApi"x ]; then
+      buildJavaBackendImageAndRun $OPENAPI_BACKEND_PORT
     elif [ "$code_path"x = "cmd-terminal"x ]; then
-      buildCppBackendImageAndRun
+      buildCppBackendImageAndRun $CMD_TERMINAL_BACKEND_PORT
     fi
   done
 
-  logDebug "buildBackendImageAndRun end"
+  logDebug "[$FUNCNAME] end"
 }
 
 function buildJavaBackendImageAndRun() {
-  logDebug "buildJavaBackendImageAndRun begin"
+  logDebug "[$FUNCNAME] begin"
 
   local port=$1
   cd ${code_download_path}
 
   prefix_name=$(echo "${code_path}-backend" | tr '[A-Z]' '[a-z]')
 
-  cleanContainerAndImage 
+  cleanContainerAndImage
 
   logWarn "docker build -t ${prefix_name}:${image_tar}  ."
   cd ${code_download_path}/${code_path}/backend
@@ -264,41 +297,46 @@ function buildJavaBackendImageAndRun() {
   docker build -t ${prefix_name}:${image_tar} .
 
   logWarn "docker run ${prefix_name}:${image_tar}  ."
-  docker run -p ${port}:8080 -d --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
+  docker run -p ${port}:${port} -d --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
 
-  logDebug "buildJavaBackendImageAndRun end"
+  logDebug "[$FUNCNAME] end"
 }
 
 function buildCppBackendImageAndRun() {
-  logDebug "buildCppBackendImageAndRun begin"
+  logDebug "[$FUNCNAME] begin"
 
   local port=$1
-  cd ${code_download_path}/
+  cd ${code_download_path}
 
-  logDebug "buildCppBackendImageAndRun end"
+  logDebug "[$FUNCNAME] end"
 }
 
 function cleanContainerAndImage() {
-  logDebug "cleanContainerAndImage begin"
+  logDebug "[$FUNCNAME] begin"
 
   logInfo "${prefix_name} clean container and image"
-  docker stop ${prefix_name}_${suf_num}
-  docker rm ${prefix_name}_${suf_num}
-  docker rmi ${prefix_name}:${image_tar}
 
-  logDebug "cleanContainerAndImage end"
+  cnt=$(docker ps -a | grep ${prefix_name}_${suf_num} | wc -l)
+  if [ "$cnt"x = "1"x ]; then
+    docker stop ${prefix_name}_${suf_num}
+    docker rm ${prefix_name}_${suf_num}
+    docker rmi ${prefix_name}:${image_tar}
+  fi
+
+  logDebug "[$FUNCNAME] end"
 }
 
 function MAIN() {
-  logError "${0}:build_prj begin"
+  logError "[$FUNCNAME] ${0}:build_prj begin"
   printEnvInfo
+  dealConfigFile
   downloadCode
   runBuildEnv
   buildFrontendPrj
   buildFrontendImageAndRun
   buildBackendPrj
   buildBackendImageAndRun
-  logError "${0}:build_prj end"
+  logError "[$FUNCNAME] ${0}:build_prj end"
 }
 
 MAIN

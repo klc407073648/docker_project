@@ -1,28 +1,31 @@
 #注意大写的全是宏定义值
 
-#当前路径
+# 项目名称、当前路径、构建镜像版本，运行容器后缀
+export project_name=stibel
 export cur_path=`pwd`
-export build_container_list='stibel_build_prj_backend_0 stibel_build_prj_frontend_0'
+export image_tar='v0.0.1'
+export suf_num='0'
 
-#build_prj_backend所需宏定义
-export build_prj_backend_container_name='stibel_build_prj_backend_0'
-export build_prj_backend_image_name='docker.io/klc407073648/centos_build_jdk_backend:v1.0'
-export build_prj_code_download_path=${cur_path}/download
-export build_prj_code_list='friendFinder'
-#userCenter openApi
-#export build_prj_code_git_path='git@github.com:klc407073648/build_lib.git'
+# 构建前端环境
+export frontend_container_name="${project_name}_build_frontend_${suf_num}"
+export frontend_image_name='docker.io/klc407073648/centos_build_frontend:v1.0'
 
-#build_prj_frontend所需宏定义
-export build_prj_frontend_container_name='stibel_build_prj_frontend_0'
-export build_prj_frontend_image_name='docker.io/klc407073648/centos_build_frontend:v1.0'
-#export build_prj_code_download_path=${cur_path}/download
-#export build_prj_code_list='friendFinder'
-#userCenter openApi
-#export build_prj_code_git_path='git@github.com:klc407073648/build_lib.git'
+# 构建后端环境
+# java后端环境
+export java_backend_container_name="${project_name}_build_java_backend_${suf_num}"
+export java_backend_image_name='docker.io/klc407073648/centos_build_jdk_backend:v1.0'
+
+# cpp后端环境
+export cpp_backend_container_name="${project_name}_build_cpp_backend_${suf_num}"
+export cpp_backend_image_name='docker.io/klc407073648/centos_build_lib:v3.0'
+
+# 构建容器列表、代码库下载路径、构建代码列表
+export container_list="${frontend_container_name} ${java_backend_container_name} ${cpp_backend_container_name}"
+export image_list="${frontend_image_name} ${java_backend_image_name} ${cpp_backend_image_name}"
+export code_download_path=${cur_path}/download
+export code_list='friendFinder' #userCenter openApi cmd-terminal
 
 export deploy_container_list='user-center-frontend user-center-backend'
-export image_tar='v0.0.1'
-export suf_fix='0'
 
 #日志路径、日志文件、日志级别
 log_dir=$cur_path/logs
@@ -123,12 +126,12 @@ function cleanRunContainer()
   logDebug "cleanRunContainer begin"
 
   sum=0
-  for container_name in $build_container_list; do
+  for container_name in $container_list; do
     cnt=$(docker ps -a | grep $container_name | wc -l)
     if [ "$cnt"x = "1"x ]; then
       sum=`expr $sum + $cnt`
-      docker stop $container_name
       logInfo "docker stop $container_name"
+      docker stop $container_name
     fi
   done
 

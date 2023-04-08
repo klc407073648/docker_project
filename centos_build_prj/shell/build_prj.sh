@@ -127,6 +127,19 @@ function friendFinderFrontend() {
 function openApiFrontend() {
   logDebug "[$FUNCNAME] begin"
 
+  # 修改环境变量信息
+  logInfo "[$FUNCNAME] modify_env_var"
+
+  cd ${cur_path}
+  modifyFileVar ${code_download_path}/${code_path}/frontend/docker/ nginx.conf ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/frontend/src requestConfig.ts ${code_path}
+
+  logWarn "[$FUNCNAME] build ${code_path} frontend"
+
+  docker exec -i ${frontend_container_name} /bin/sh -c "source /etc/profile &&  \
+    cd ${code_download_path}/${code_path}/frontend  \
+    && yarn install -y && npm run build"
+
   logDebug "[$FUNCNAME] end"
 }
 
@@ -237,6 +250,35 @@ function friendFinderBackend() {
 function openApiBackend() {
   logDebug "[$FUNCNAME] begin"
 
+  logInfo "[$FUNCNAME] modify_env_var"
+
+  cd ${cur_path}
+  modifyFileVar ${code_download_path}/${code_path}/backend/src/main/resources application-prod.yml ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/backend/openapi-gateway/src/main/resources application-prod.yml ${code_path}
+  modifyFileVar ${code_download_path}/${code_path}/backend/openapi-interface/src/main/resources application-prod.yml ${code_path}
+
+  logWarn "[$FUNCNAME] build ${code_path} backend"
+
+  # openapi-client-sdk
+  docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
+  cd ${code_download_path}/${code_path}/backend/openapi-client-sdk && mvn install"
+
+  # openapi-common
+  docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
+  cd ${code_download_path}/${code_path}/backend/openapi-common && mvn install"
+
+  # backend
+  docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
+  cd ${code_download_path}/${code_path}/backend && mvn package -DskipTests"
+
+  # openapi-gateway
+  docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
+  cd ${code_download_path}/${code_path}/backend/openapi-gateway && mvn package -DskipTests"
+
+  # openapi-interface
+  docker exec -i ${java_backend_container_name} /bin/sh -c "source /etc/profile &&  \
+  cd ${code_download_path}/${code_path}/backend/openapi-interface && mvn package -DskipTests"
+
   logDebug "[$FUNCNAME] begin"
 }
 
@@ -271,7 +313,7 @@ function buildBackendImageAndRun() {
     elif [ "$code_path"x = "friendFinder"x ]; then
       buildJavaBackendImageAndRun $FRIENDFINDER_BACKEND_PORT
     elif [ "$code_path"x = "openApi"x ]; then
-      buildJavaBackendImageAndRun $OPENAPI_BACKEND_PORT
+      buildJavaBackendMutiPortImageAndRun $OPENAPI_BACKEND_PORT $OPENAPI_BACKEND_GATEWAY_PORT $OPENAPI_BACKEND_INTERFACE_PORT
     elif [ "$code_path"x = "cmd-terminal"x ]; then
       buildCppBackendImageAndRun $CMD_TERMINAL_BACKEND_PORT
     fi
@@ -298,6 +340,29 @@ function buildJavaBackendImageAndRun() {
 
   logWarn "docker run ${prefix_name}:${image_tar}  ."
   docker run -p ${port}:${port} -d --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
+
+  logDebug "[$FUNCNAME] end"
+}
+
+function buildJavaBackendMutiPortImageAndRun() {
+  logDebug "[$FUNCNAME] begin"
+
+  local port1=$1
+  local port2=$2
+  local port3=$3
+  cd ${code_download_path}
+
+  prefix_name=$(echo "${code_path}-backend" | tr '[A-Z]' '[a-z]')
+
+  logWarn "docker build -t ${prefix_name}:${image_tar}  ."
+  cd ${code_download_path}/${code_path}/backend
+
+  # 特殊处理，解决openjdk和jdk的差别，且指定java路径
+  sed -i 's/maven:3.5-jdk-8-alpine/docker.io\/klc407073648\/centos_build_jdk_backend:v1.0/' Dockerfile
+  docker build -t ${prefix_name}:${image_tar} .
+
+  logWarn "docker run ${prefix_name}:${image_tar}  ."
+  docker run -p ${port1}:${port1} -p ${port2}:${port2} -p ${port3}:${port3} -d --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
 
   logDebug "[$FUNCNAME] end"
 }

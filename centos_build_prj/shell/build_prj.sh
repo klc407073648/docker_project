@@ -186,7 +186,7 @@ function buildFrontendImageAndRun() {
 
     logWarn "docker run ${prefix_name}_${suf_num}"
 
-    docker run -p ${port}:80 -d --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
+    docker run -it -d -p ${port}:80 --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
   done
 
   logDebug "[$FUNCNAME] end"
@@ -339,7 +339,7 @@ function buildJavaBackendImageAndRun() {
   docker build -t ${prefix_name}:${image_tar} .
 
   logWarn "docker run ${prefix_name}:${image_tar}  ."
-  docker run -p ${port}:${port} -d --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
+  docker run -it -d -p ${port}:${port} --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
 
   logDebug "[$FUNCNAME] end"
 }
@@ -362,7 +362,7 @@ function buildJavaBackendMutiPortImageAndRun() {
   docker build -t ${prefix_name}:${image_tar} .
 
   logWarn "docker run ${prefix_name}:${image_tar}  ."
-  docker run -p ${port1}:${port1} -p ${port2}:${port2} -p ${port3}:${port3} -d --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
+  docker run -it -d -p ${port1}:${port1} -p ${port2}:${port2} -p ${port3}:${port3} --name ${prefix_name}_${suf_num} ${prefix_name}:${image_tar}
 
   logDebug "[$FUNCNAME] end"
 }

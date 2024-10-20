@@ -41,3 +41,7 @@ docker run -it -d -p 4300:4300 --name docker-angular docker.io/klc407073648/dock
 ![docker仓库](./images/docker仓库.png)
 
 **尽量使用精简版镜像文件，不要过多的使用源码自己编译，使用现成的镜像加上简单修改**
+
+
+
+docker run -it -d -p 8082:8082 --name apollo_client  centos:centos7

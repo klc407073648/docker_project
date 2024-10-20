@@ -117,3 +117,10 @@ istiod-5745bd5f6b-2ptpt                1/1     Running   0          10m
 kiali-57fb5bb5c6-26wq8                 1/1     Running   0          9m55s
 prometheus-78f785fc6b-nwpm8            2/2     Running   0          9m55s
 ```
+
+# 清理istio
+
+执行命令:
+```
+istioctl manifest generate --set profile=demo | kubectl delete -f -
+```

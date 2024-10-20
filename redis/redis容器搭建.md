@@ -56,3 +56,21 @@ OK
 root@b1298edf0d30:/data# 
 redis-cli -h 127.0.0.1 -p 6379 -a 123456
 ```
+
+为现有的redis创建密码或修改密码的方法：
+```
+#1.进入redis的容器
+docker exec -it 容器ID bash
+
+#2.进入redis目录
+cd /usr/local/bin
+
+#3.运行命令：
+redis-cli
+
+#4.查看现有的redis密码：
+config get requirepass
+
+#5.设置redis密码
+config set requirepass 密码
+```

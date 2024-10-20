@@ -43,3 +43,11 @@ dos2unix *.sh
 2. 新建pipeline任务，将 `PipeLineScript.txt ` 的内容放置在构建脚本中，保存
 
 3. 点击 `立即构建`
+
+# 遗留问题
+
+有时候执行会报错：
+
+```
+ldconfig: Renaming of /etc/ld.so.cache~ to /etc/ld.so.cache failed: No such file or directory
+```

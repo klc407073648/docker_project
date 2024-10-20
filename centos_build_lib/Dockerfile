@@ -10,7 +10,7 @@ COPY ./Python-3.7.10.tgz /home/tools
 RUN cd /home/tools && tar -xvf Python-3.7.10.tgz
 RUN mkdir -p /home/tools/python3
 
-RUN cd /home/tools/Python-3.7.10 ./configure --prefix=/home/tools/python3/ --with-ssl
+RUN cd /home/tools/Python-3.7.10 && ./configure --prefix=/home/tools/python3/ --with-ssl
 RUN cd /home/tools/Python-3.7.10 && make
 RUN cd /home/tools/Python-3.7.10 && make install
 

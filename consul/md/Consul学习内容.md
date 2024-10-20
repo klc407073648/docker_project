@@ -43,6 +43,10 @@ docker exec -t agent2 consul members
 
  git clone git@github.com:oliora/ppconsul.git
 
+```
+git submodule add https://github.com/oliora/ppconsul.git
+```
+
 yum install -y conan
 
 ```bash

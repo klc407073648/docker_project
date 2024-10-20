@@ -184,7 +184,7 @@ docker run -d -p 3307:3306 docker-mysql
 ## 项目搭建
 
 所需文件:
-```
+```lua
 |-- build_mysql.sh
 |-- Dockerfile
 |-- setup.sh
@@ -224,3 +224,9 @@ ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '456789';
 flush privileges;
 
 https://blog.csdn.net/sinat_34974437/article/details/104431289
+
+# 注意事项(重要)
+
+如果初始化MySQL数据库时，就需要注入原始的记录，需要同步修改 mysql/environment 路径下的 sql, Dockerfile, setup.sh
+
+不过也需要考虑，有些数据应该依赖项目库下的数据，不可能每次项目库下内容修改，都同步拷贝一份到该路径，容易遗忘 TODO

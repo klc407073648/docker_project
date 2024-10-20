@@ -159,7 +159,7 @@ function cleanPrjRunContainerAndImage() {
    for code_path in $code_list; do
       backend_prefix_name=$(echo "${code_path}-backend" | tr '[A-Z]' '[a-z]')
 
-      cnt=$(docker ps -a | grep ${frontend_prefix_name}_${suf_num} | wc -l)
+      cnt=$(docker ps -a | grep ${backend_prefix_name}_${suf_num} | wc -l)
       if [ "$cnt"x = "1"x ]; then
          logInfo "docker stop and rm ${backend_prefix_name}_${suf_num}"
          docker stop ${backend_prefix_name}_${suf_num}

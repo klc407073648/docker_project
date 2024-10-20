@@ -15,7 +15,8 @@ RUN mkdir -p /home/mysql   \
     &&  mkdir -p /mysql/sql/docker_mysql   \
     &&  mkdir -p /mysql/sql/student   \
     &&  mkdir -p /mysql/sql/privileges \
-    &&  mkdir -p /mysql/sql/apollo
+    &&  mkdir -p /mysql/sql/apollo      \
+    &&  mkdir -p /mysql/sql/usercenter
  
 #将所需文件放到容器中
 COPY setup.sh /mysql/setup.sh
@@ -32,6 +33,9 @@ COPY ./sql/privileges/privileges.sql        /mysql/sql/privileges
 
 COPY ./sql/apollo/apolloconfigdb.sql        /mysql/sql/apollo
 COPY ./sql/apollo/apolloportaldb.sql        /mysql/sql/apollo
+
+COPY ./sql/usercenter/create_table.sql         /mysql/sql/usercenter
+COPY ./sql/usercenter/update_data.sql          /mysql/sql/usercenter
 
 RUN sed -i "s/\$MYSQL_ROOT_PASSWORD/$MYSQL_ROOT_PASSWORD/g"         /mysql/sql/privileges/privileges.sql   \
     &&  sed -i "s/\$MYSQL_USER/$MYSQL_USER/g"                       /mysql/sql/privileges/privileges.sql   \ 

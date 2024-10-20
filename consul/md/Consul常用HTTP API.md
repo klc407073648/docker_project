@@ -220,7 +220,7 @@ agent endpoints用来和本地agent进行交互，一般用来服务注册和检
 
 ```
 /v1/agent/checks : 返回本地agent注册的所有检查(包括配置文件和HTTP接口)
-/v1/agent/services : 返回本地agent注册的所有 服务
+/v1/agent/services : 返回本地agent注册的所有服务
 /v1/agent/members : 返回agent在集群的gossip pool中看到的成员
 /v1/agent/self : 返回本地agent的配置和成员信息
 /v1/agent/join/<address> : 触发本地agent加入node

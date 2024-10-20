@@ -6,7 +6,7 @@ services:
     container_name: "${WEB_CONTAINER_NAME}"
     restart: always
     ports:
-      - '${HOST_MACHINE_WEB_PORT}:4300'
+      - '${HOST_MACHINE_WEB_PORT}:${WEB_CONTAINER_PORT}'
     volumes:
       - ./environment/conf/nginx.conf:/etc/nginx/nginx.conf
       - ./environment/conf.d:/etc/nginx/conf.d

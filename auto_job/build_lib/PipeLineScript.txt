@@ -1,4 +1,4 @@
-{
+pipeline {
     agent none
 
     stages {
@@ -40,6 +40,21 @@
                    sh "./clean_after_build.sh"
                 }
             }
+        }
+    }
+    //发送邮件
+    post{
+     success {
+            echo "Build Success"
+            //emailext attachmentsPattern: 'html/TestReport$Dateparameter.html', body: '$DEFAULT_CONTENT', recipientProviders: [developers()], replyTo: '$DEFAULT_REPLYTO', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_REPLYTO'
+        }
+        failure {
+            echo "Build Fail"
+            //emailext attachmentsPattern: 'html/TestReport$Dateparameter.html', body: '$DEFAULT_CONTENT', recipientProviders: [developers()], replyTo: '$DEFAULT_REPLYTO', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_REPLYTO'
+        }
+        always{
+            emailext attachmentsPattern: 'html/TestReport$Dateparameter.html', body: '$DEFAULT_CONTENT', recipientProviders: [developers()], replyTo: '$DEFAULT_REPLYTO', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_REPLYTO'
+        
         }
     }
 }
